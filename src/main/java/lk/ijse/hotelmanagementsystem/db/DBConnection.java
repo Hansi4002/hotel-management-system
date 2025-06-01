@@ -6,25 +6,26 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static DBConnection dBConnection;
+    private static DBConnection dbConnection;
     private Connection connection;
 
-    private DBConnection() throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotelmanagementsystem", "root", "mySQL");
+    // Database credentials (modify according to your setup)
+    private static final String URL = "jdbc:mysql://localhost:3306/hotelmanagementsystem"; // ✅ Replace with your DB name
+    private static final String USERNAME = "root"; // ✅ Replace with your DB username
+    private static final String PASSWORD = "mySQL"; // ✅ Replace with your DB password
+
+    private DBConnection() throws SQLException {
+        this.connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 
-    public static DBConnection getInstance() throws SQLException, ClassNotFoundException {
-        if (dBConnection == null) {
-            dBConnection = new DBConnection();
+    public static DBConnection getInstance() throws SQLException {
+        if (dbConnection == null || dbConnection.getConnection().isClosed()) {
+            dbConnection = new DBConnection();
         }
-        return dBConnection;
+        return dbConnection;
     }
 
-    public Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotelmanagementsystem", "root", "mySQL");
-        }
+    public Connection getConnection() {
         return connection;
     }
 }

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1190.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.SupplierFoodController">
+   <children>
+      <BorderPane prefHeight="800.0" prefWidth="1190.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="60.0" prefWidth="1000.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+               </padding>
+               <children>
+                  <Label text="PulseHorizon Hotel" textFill="WHITE">
+                     <font>
+                        <Font name="Segoe UI Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="30.0" prefWidth="590.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefHeight="46.0" prefWidth="106.0" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Log Out" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </top>
+         <left>
+            <VBox prefHeight="702.0" prefWidth="242.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+               </padding>
+               <children>
+                  <Label lineSpacing="20.0" prefHeight="42.0" prefWidth="222.0" text="DAILY OPERATION" textFill="#ecf0f1">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </left>
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1000.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="PulseHorizon Hotel" textFill="WHITE">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
+         </bottom>
+         <center>
+            <VBox spacing="20.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefWidth="908.0" spacing="10.0" style="-fx-background-color: #fff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label prefHeight="26.0" prefWidth="181.0" text="SUPPLIER FOOD DETAIL" textFill="#2c3e50">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Region prefHeight="69.0" prefWidth="535.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnEditOnAction" prefHeight="34.0" prefWidth="90.0" style="-fx-background-color: #f39c12; -fx-background-radius: 4;" text="Edit" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" style="-fx-background-color: #ecf0f1;" />
+                        <GridPane hgap="15.0" prefHeight="206.0" prefWidth="878.0" vgap="15.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="Menu ID:" textFill="#34495e">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Supplier ID:" textFill="#34495e" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Cost:" textFill="#34495e" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Quantity:" textFill="#34495e" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Supply Date:" textFill="#34495e" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtQuantity" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <ComboBox fx:id="cmMenuId" prefWidth="150.0" promptText="Select a Food" style="-fx-background-color: #ffff; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="cmSupplierId" prefWidth="150.0" promptText="Select a Supplier" style="-fx-background-color: #ffff; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtCost" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="dpSupplyDate" promptText="mm/dd/yyyy" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                           </children>
+                        </GridPane>
+                        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSaveOnAction" style="-fx-background-color: #27ae60; -fx-background-radius: 4;" text="Save" textFill="WHITE">
+                                 <padding>
+                                    <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDeleteOnAction" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Delete" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                                 </padding>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

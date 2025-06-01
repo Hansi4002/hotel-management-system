@@ -1,0 +1,63 @@
+package lk.ijse.hotelmanagementsystem.dto.tm;
+
+import java.sql.Date;
+
+public class ReservationTM {
+    private String reservationID;
+    private String guestID;
+    private String roomID;
+    private Date checkInDate;
+    private Date checkOutDate;
+    private Date bookingTime;
+    private int numberOfGuests;
+    private String status;
+    private double totalCost;
+
+    public ReservationTM(String reservationID, String guestID, String roomID, Date checkInDate, Date checkOutDate, Date bookingTime, int numberOfGuests, String status, double totalCost) {
+        this.reservationID = reservationID;
+        this.guestID = guestID;
+        this.roomID = roomID;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.bookingTime = bookingTime;
+        this.numberOfGuests = numberOfGuests;
+        this.status = status;
+        this.totalCost = totalCost;
+    }
+
+    public String getReservationID() {
+        return reservationID;
+    }
+
+    public String getGuestID() {
+        return guestID;
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public Date getBookingTime() {
+        return bookingTime;
+    }
+
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+}
