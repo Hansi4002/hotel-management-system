@@ -36,8 +36,10 @@ public class RoomController implements Initializable {
     public Hyperlink linkReservations;
     public Hyperlink linkOrders;
     public Hyperlink linkReviews;
+    public Button btnEdit;
 
     private final RoomModel roomModel = new RoomModel();
+    private final RoomDTO roomDTO = new RoomDTO();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,6 +52,7 @@ public class RoomController implements Initializable {
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colRoomNumber.setCellValueFactory(new PropertyValueFactory<>("roomNumber"));
 
+        tblRoom.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         loadRoomData();
     }
 
@@ -120,4 +123,70 @@ public class RoomController implements Initializable {
             new Alert(Alert.AlertType.ERROR, "Page Load Failed!").show();
         }
     }
+
+    public void btnCancelOnAction(ActionEvent actionEvent) {
+        RoomTM selectedRoom = tblRoom.getSelectionModel().getSelectedItem();
+
+        if (selectedRoom == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select a room to delete").show();
+            return;
+        }
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete room " + selectedRoom.getRoomId() + "?", ButtonType.YES, ButtonType.NO);
+        confirmation.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                try {
+                    // Delete the room from the database
+                    boolean isDeleted = roomModel.deleteRoom(selectedRoom.getRoomId());
+                    if (isDeleted) {
+                        // Remove the room from the TableView
+                        tblRoom.getItems().remove(selectedRoom);
+                        new Alert(Alert.AlertType.INFORMATION, "Room deleted successfully").show();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Failed to delete room").show();
+                    }
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                    new Alert(Alert.AlertType.ERROR, "Error deleting room: " + e.getMessage()).show();
+                }
+            }
+        });
+    }
+
+    public void btnEditOnAction(ActionEvent actionEvent) {
+        RoomTM selectedRoom = tblRoom.getSelectionModel().getSelectedItem();
+
+        if (selectedRoom == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select a room to edit").show();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RoomDetailView.fxml"));
+            Parent load = loader.load();
+
+            RoomDetailController controller = loader.getController();
+
+            controller.setRoomData(new RoomDTO(
+                    selectedRoom.getRoomId(),
+                    selectedRoom.getRoomType(),
+                    selectedRoom.getPrice(),
+                    selectedRoom.getStatus(),
+                    selectedRoom.getFloorNumber(),
+                    selectedRoom.getCapacity(),
+                    selectedRoom.getDescription(),
+                    selectedRoom.getRoomNumber()
+            ));
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(load));
+            stage.setTitle("Edit Room");
+            stage.show();
+
+            stage.setOnHiding(event -> loadRoomData());
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to open Edit Room window").show();
+        }
+    }
+
 }
