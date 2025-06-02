@@ -1,219 +1,193 @@
-//package lk.ijse.hotelmanagementsystem.controller;
-//
-//import javafx.collections.FXCollections;
-//import javafx.event.ActionEvent;
-//import javafx.scene.control.*;
-//import javafx.scene.control.cell.PropertyValueFactory;
-//import lk.ijse.hotelmanagementsystem.dto.GuestDTO;
-//import lk.ijse.hotelmanagementsystem.dto.tm.GuestTM;
-////import lk.ijse.hotelmanagementsystem.model.GuestModel;
-//
-//import java.sql.Date;
-//import java.sql.SQLException;
-//import java.util.List;
-//import java.util.Optional;
-//
-//public class GuestController {
-//    public Button btnLogout;
-//    public Button btnViewGuests;
-//    public Button btnAddGuestNavigation;
-//    public Button btnBackToMenu;
-//    public Button btnEdit;
-//    public Label lblGuestId;
-//    public TextField txtName;
-//    public DatePicker dpDOB;
-//    public TextField txtEmail;
-//    public TextField txtContact;
-//    public TextField txtAddress;
-//    public DatePicker dpRegistrationDate;
-//    public ComboBox cmLoyaltyStatus;
-//    public Button btnSave;
-//    public Button btnDelete;
-//    public Button btnAddGuest;
-//
-//    public TableView<GuestTM> tblGuests;
-//    public TableColumn<GuestTM,String> colGuestId;
-//    public TableColumn<GuestTM,String> colName;
-//    public TableColumn<GuestTM,String> colAddress;
-//    public TableColumn<GuestTM, Date> colDOB;
-//    public TableColumn<GuestTM,String> colContact;
-//    public TableColumn<GuestTM,String> colEmail;
-//    public TableColumn<GuestTM,Date> colRegistrationDate;
-//    public TableColumn<GuestTM,String> colLoyaltyStatus;
-//
-//    private final GuestModel guestModel = new GuestModel();
-//
-//    private final String namePattern = "^[A-Za-z ]+$";
-//    private final String emailPattern = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-//    private final String contactPattern = "^\\d{10}$";
-//    private final String addressPattern = "^[A-Za-z0-9 ,.-]+$";
-//
-//    public void initialize() {
-//        colGuestId.setCellValueFactory(new PropertyValueFactory<>("guestId"));
-//        colName.setCellValueFactory(new PropertyValueFactory<>("guestName"));
-//        colDOB.setCellValueFactory(new PropertyValueFactory<>("dob"));
-//        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-//        colContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
-//        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-//        colRegistrationDate.setCellValueFactory(new PropertyValueFactory<>("registrationDate"));
-//        colLoyaltyStatus.setCellValueFactory(new PropertyValueFactory<>("loyaltyStatus"));
-//
-//        cmLoyaltyStatus.getItems().addAll("Silver", "Gold","Platinum");
-//        try {
-//            resetPage();
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            new Alert(Alert.AlertType.ERROR,"Something went wrong when trying to reset the page").show();
-//        }
-//    }
-//
-//    private void resetPage() {
-//        try {
-//            loadTableDate();
-//            loadNextId();
-//            btnSave.setDisable(false);
-//            btnDelete.setDisable(false);
-//            btnEdit.setDisable(false);
-//
-//            txtName.setText("");
-//            dpDOB.setValue(null);
-//            txtAddress.setText("");
-//            txtContact.setText("");
-//            txtEmail.setText("");
-//            dpRegistrationDate.setValue(null);
-//            cmLoyaltyStatus.setValue(null);
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            new Alert(Alert.AlertType.ERROR,"Something went wrong while resetting the page").show();
-//        }
-//    }
-//
-//    private void loadNextId() throws SQLException, ClassNotFoundException {
-//        String nextId = GuestModel.getNextGuestId();
-//        lblGuestId.setText(nextId);
-//    }
-//
-//    private void loadTableDate() throws SQLException, ClassNotFoundException {
-//        List<GuestDTO> guests = guestModel.getAllGuest();
-//            List<GuestTM> guestTMS = guests.stream().map(guest -> new GuestTM(
-//                guest.getGuestId(),
-//                guest.getName(),
-//                guest.getDob(),
-//                guest.getAddress(),
-//                guest.getContact(),
-//                guest.getEmail(),
-//                guest.getRegistrationDate(),
-//                guest.getLoyaltyStatus()
-//        )).toList();
-//        tblGuests.setItems(FXCollections.observableArrayList(guestTMS));
-//    }
-//
-//    public void btnLogoutOnAction(ActionEvent actionEvent) {
-//    }
-//
-//    public void btnEditOnAction(ActionEvent actionEvent) {
-//        String guestId = lblGuestId.getText();
-//        String name = txtName.getText();
-//        Date dob = Date.valueOf(dpDOB.getValue());
-//        String address = txtAddress.getText();
-//        String contact = txtContact.getText();
-//        String email = txtEmail.getText();
-//        Date regDate = Date.valueOf(dpRegistrationDate.getValue());
-//        String loyaltyStatus = (String) cmLoyaltyStatus.getValue();
-//
-//        GuestDTO guestDTO = new GuestDTO(guestId, name, dob,address,contact,email,regDate,loyaltyStatus);
-//
-//        try {
-//            boolean isUpdated = guestModel.updateGuest(guestDTO);
-//            if(isUpdated){
-//                resetPage();
-//                new Alert(Alert.AlertType.INFORMATION,"Guest updated successfully").show();
-//            }else {
-//                new Alert(Alert.AlertType.ERROR,"Guest update failed").show();
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            new Alert(Alert.AlertType.ERROR,"Something went wrong when trying to update guest").show();
-//        }
-//    }
-//
-//    public void btnSaveOnAction(ActionEvent actionEvent) {
-//        String guestId = lblGuestId.getText();
-//        String name = txtName.getText();
-//        Date dob = Date.valueOf(dpDOB.getValue());
-//        String address = txtAddress.getText();
-//        String contact = txtContact.getText();
-//        String email = txtEmail.getText();
-//        Date regDate = Date.valueOf(dpRegistrationDate.getValue());
-//        String loyaltyStatus = (String) cmLoyaltyStatus.getValue();
-//
-//        boolean isValidname = name.matches(namePattern);
-//        boolean isValidemail = email.matches(emailPattern);
-//        boolean isValidaddress = address.matches(addressPattern);
-//        boolean isValidcontact = contact.matches(contactPattern);
-//
-//        txtName.setStyle(txtName.getStyle()+";-fx-border-color: #7367F0;");
-//        txtAddress.setStyle(txtAddress.getStyle()+";-fx-border-color: #7367F0;");
-//        txtEmail.setStyle(txtEmail.getStyle()+";-fx-border-color: #7367F0");
-//        txtContact.setStyle(txtContact.getStyle()+";-fx-border-color: #7367F0");
-//
-//        if(!isValidname)txtName.setStyle(txtName.getStyle()+";-fx-border-color: red");
-//        if (!isValidaddress)txtAddress.setStyle(txtAddress.getStyle()+";-fx-border-color: red");
-//        if (!isValidemail)txtEmail.setStyle(txtEmail.getStyle()+";-fx-border-color: red");
-//        if (!isValidcontact)txtContact.setStyle(txtContact.getStyle()+";-fx-border-color: red");
-//
-//        if (dpDOB.getValue() == null || dpRegistrationDate.getValue() == null) {
-//            new Alert(Alert.AlertType.ERROR, "Please fill all date fields").show();
-//            return;
-//        }
-//
-//        GuestDTO guestDTO = new GuestDTO(guestId, name, dob, address, contact,email,regDate,loyaltyStatus);
-//        if(isValidname && isValidaddress && isValidcontact && isValidemail){
-//            try {
-//                boolean isSaved = guestModel.saveGuest(guestDTO);
-//                if(isSaved){
-//                    resetPage();
-//                    new Alert(Alert.AlertType.INFORMATION,"Guest saved successfully").show();
-//                }else {
-//                    new Alert(Alert.AlertType.ERROR,"Guest saved failed").show();
-//                }
-//            }catch (Exception e){
-//                e.printStackTrace();
-//                new Alert(Alert.AlertType.ERROR,"Something went wrong when trying to save guest").show();
-//            }
-//        }
-//    }
-//
-//    public void btnDeleteOnAction(ActionEvent actionEvent) {
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this guest?",ButtonType.YES,ButtonType.NO);
-//        Optional<ButtonType> response = alert.showAndWait();
-//        if (response.isPresent() && response.get() == ButtonType.YES){
-//            String guestId = lblGuestId.getText();
-//            try {
-//                boolean isDeleted = guestModel.deleteGuest(guestId);
-//                if(isDeleted){
-//                    resetPage();
-//                    new Alert(Alert.AlertType.INFORMATION,"Guest deleted successfully").show();
-//                }else{
-//                    new Alert(Alert.AlertType.ERROR,"Guest delete failed").show();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                new Alert(Alert.AlertType.ERROR,"Something went wrong when trying to delete guest").show();
-//            }
-//        }
-//    }
-//
-//    public void btnAddNewGuestOnAction(ActionEvent actionEvent) {
-//        resetPage();
-//        try {
-//            loadNextId();
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            new Alert(Alert.AlertType.ERROR,"Something went wrong when trying to add guest").show();
-//        }
-//        btnSave.setDisable(false);
-//        btnDelete.setDisable(true);
-//        btnEdit.setDisable(true);
-//    }
-//}
+package lk.ijse.hotelmanagementsystem.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import lk.ijse.hotelmanagementsystem.dto.GuestDTO;
+import lk.ijse.hotelmanagementsystem.model.GuestModel;
+
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+public class GuestController implements Initializable {
+    public Label lblGuestId;
+    public TextField txtName;
+    public DatePicker dpDOB;
+    public TextField txtEmail;
+    public TextField txtContact;
+    public TextField txtAddress;
+    public DatePicker dpRegistrationDate;
+    public ComboBox cmLoyaltyStatus;
+    public Button btnCancel;
+    public Button btnSave;
+
+    private GuestModel guestModel = new GuestModel();
+    private GuestTableController guestTableController;
+    private boolean isEditMode = false;
+    private String existingGuestId = null;
+    private String guestIdValidation = "^G\\d{3}$";
+    private String emailValidation = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    private String contactValidation = "^\\d{10}$";
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public void btnCancelOnAction(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to cancel and reset the form?",
+                ButtonType.YES, ButtonType.NO);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            resetPage();
+        }
+    }
+
+    public void btnSaveOnAction(ActionEvent actionEvent) {
+        try {
+            String guestId = lblGuestId.getText();
+            String name = txtName.getText();
+            java.time.LocalDate dobLocal = dpDOB.getValue();
+            String email = txtEmail.getText();
+            String contact = txtContact.getText();
+            String address = txtAddress.getText();
+            java.time.LocalDate registrationDateLocal = dpRegistrationDate.getValue();
+            String loyaltyStatus = cmLoyaltyStatus.getSelectionModel().getSelectedItem().toString();
+
+            if (guestId.isEmpty() || name.isEmpty() || dobLocal == null || email.isEmpty() ||
+                    contact.isEmpty() || address.isEmpty() || registrationDateLocal == null || loyaltyStatus == null) {
+                new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
+                return;
+            }
+
+            if (!guestId.matches(guestIdValidation)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid Guest ID format (e.g., G001)").show();
+                return;
+            }
+
+            if (!email.matches(emailValidation)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid email format").show();
+                return;
+            }
+
+            if (!contact.matches(contactValidation)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid contact number (must be 10 digits)").show();
+                return;
+            }
+
+            Date dob = dateFormat.parse(dobLocal.toString());
+            Date registrationDate = dateFormat.parse(registrationDateLocal.toString());
+
+            Date today = new Date();
+            long ageInMillis = today.getTime() - dob.getTime();
+            long ageInYears = ageInMillis / (1000L * 60 * 60 * 24 * 365);
+            if (ageInYears < 18) {
+                new Alert(Alert.AlertType.ERROR, "❌ Guest must be at least 18 years old").show();
+                return;
+            }
+
+            GuestDTO guestDTO = new GuestDTO(
+                    guestId,
+                    name,
+                    (java.sql.Date) dob,
+                    address,
+                    contact,
+                    email,
+                    (java.sql.Date) registrationDate,
+                    loyaltyStatus
+            );
+
+            if (isEditMode) {
+                boolean isUpdated = guestModel.updateGuest(guestDTO);
+                if (isUpdated) {
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Guest updated successfully").show();
+                    if (guestTableController != null) {
+                        guestTableController.loadGuestData();
+                    }
+                    Stage stage = (Stage) btnSave.getScene().getWindow();
+                    stage.close();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "❌ Failed to update guest").show();
+                }
+            } else {
+                boolean isSaved = guestModel.saveGuest(guestDTO);
+                if (isSaved) {
+                    resetPage();
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Guest saved successfully").show();
+                    if (guestTableController != null) {
+                        guestTableController.loadGuestData();
+                    }
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "❌ Guest saving failed").show();
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "❌ Error saving guest: " + e.getMessage()).show();
+        }
+    }
+
+    private void resetPage() {
+        lblGuestId.setText(GuestModel.getNextGuestId());
+        txtName.clear();
+        dpDOB.setValue(null);
+        txtEmail.clear();
+        txtContact.clear();
+        txtAddress.clear();
+        dpRegistrationDate.setValue(java.time.LocalDate.now());
+        cmLoyaltyStatus.getSelectionModel().clearSelection();
+        btnSave.setDisable(false);
+        btnCancel.setDisable(false);
+        isEditMode = false;
+        existingGuestId = null;
+        lblGuestId.setDisable(false);
+    }
+
+    public void setGuestTableController(GuestTableController guestTableController) {
+    }
+
+    public void setGuestData(GuestDTO guestDTO) {
+        isEditMode = true;
+        existingGuestId = guestDTO.getGuestId();
+        if (guestDTO != null) {
+            lblGuestId.setText(guestDTO.getGuestId());
+            txtName.setText(guestDTO.getName());
+            // Convert Date to LocalDate for DatePicker
+            if (guestDTO.getDob() != null) {
+                dpDOB.setValue(java.time.LocalDate.parse(dateFormat.format(guestDTO.getDob())));
+            }
+            txtEmail.setText(guestDTO.getEmail());
+            txtContact.setText(guestDTO.getContact());
+            txtAddress.setText(guestDTO.getAddress());
+            if (guestDTO.getRegistrationDate() != null) {
+                dpRegistrationDate.setValue(java.time.LocalDate.parse(dateFormat.format(guestDTO.getRegistrationDate())));
+            }
+            cmLoyaltyStatus.setValue(guestDTO.getLoyaltyStatus());
+
+            txtName.setDisable(false);
+            dpDOB.setDisable(false);
+            txtEmail.setDisable(false);
+            txtContact.setDisable(false);
+            txtAddress.setDisable(false);
+            dpRegistrationDate.setDisable(false);
+            cmLoyaltyStatus.setDisable(false);
+            btnSave.setDisable(false);
+            btnCancel.setDisable(false);
+            lblGuestId.setDisable(true);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "❌ No guest data provided").show();
+        }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        cmLoyaltyStatus.setItems(FXCollections.observableArrayList("Bronze", "Silver", "Gold"));
+        dpRegistrationDate.setValue(java.time.LocalDate.now());
+
+        lblGuestId.setText(GuestModel.getNextGuestId());
+    }
+}

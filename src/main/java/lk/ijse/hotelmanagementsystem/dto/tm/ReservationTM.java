@@ -1,6 +1,8 @@
 package lk.ijse.hotelmanagementsystem.dto.tm;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class ReservationTM {
     private String reservationID;
@@ -8,12 +10,12 @@ public class ReservationTM {
     private String roomID;
     private Date checkInDate;
     private Date checkOutDate;
-    private Date bookingTime;
+    private Timestamp bookingTime;
     private int numberOfGuests;
     private String status;
     private double totalCost;
 
-    public ReservationTM(String reservationID, String guestID, String roomID, Date checkInDate, Date checkOutDate, Date bookingTime, int numberOfGuests, String status, double totalCost) {
+    public ReservationTM(String reservationID, String guestID, String roomID, Date checkInDate, Date checkOutDate, Timestamp bookingTime, int numberOfGuests, String status, double totalCost) {
         this.reservationID = reservationID;
         this.guestID = guestID;
         this.roomID = roomID;
@@ -23,10 +25,6 @@ public class ReservationTM {
         this.numberOfGuests = numberOfGuests;
         this.status = status;
         this.totalCost = totalCost;
-    }
-
-    public String getReservationID() {
-        return reservationID;
     }
 
     public String getGuestID() {
@@ -45,7 +43,7 @@ public class ReservationTM {
         return checkOutDate;
     }
 
-    public Date getBookingTime() {
+    public Timestamp getBookingTime() {
         return bookingTime;
     }
 
@@ -59,5 +57,15 @@ public class ReservationTM {
 
     public double getTotalCost() {
         return totalCost;
+    }
+
+    public String getReservationId() {
+        return reservationID;
+    }
+
+    public String getGuestId() {
+    }
+
+    public String getRoomId() {
     }
 }
