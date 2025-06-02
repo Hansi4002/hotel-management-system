@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"fx:controller="lk.ijse.hotelmanagementsystem.controller.ReservationController">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.ReservationController">
    <children>
       <VBox layoutX="381.0" layoutY="81.0" prefHeight="500.0" prefWidth="600.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -73,7 +73,7 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblReservationId" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" text="RE001" textFill="#2c3e50" GridPane.columnIndex="1" />
+                              <Label fx:id="lblReservationId" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" text="RES001" textFill="#2c3e50" GridPane.columnIndex="1" />
                               <Label text="Guest ID:" textFill="#34495e" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="System Bold" size="12.0" />

@@ -79,7 +79,7 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
-                                        <Label text="ROOM LIST" textFill="#2c3e50">
+                                        <Label text="Guest LIST" textFill="#2c3e50">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>

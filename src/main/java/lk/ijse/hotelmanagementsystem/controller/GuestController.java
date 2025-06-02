@@ -9,6 +9,7 @@ import lk.ijse.hotelmanagementsystem.dto.GuestDTO;
 import lk.ijse.hotelmanagementsystem.model.GuestModel;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class GuestController implements Initializable {
     private String contactValidation = "^\\d{10}$";
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public void btnCancelOnAction(ActionEvent actionEvent) {
+    public void btnCancelOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to cancel and reset the form?",
                 ButtonType.YES, ButtonType.NO);
@@ -93,11 +94,11 @@ public class GuestController implements Initializable {
             GuestDTO guestDTO = new GuestDTO(
                     guestId,
                     name,
-                    (java.sql.Date) dob,
+                    new java.sql.Date(dob.getTime()),
                     address,
                     contact,
                     email,
-                    (java.sql.Date) registrationDate,
+                    new java.sql.Date(registrationDate.getTime()),
                     loyaltyStatus
             );
 
@@ -125,13 +126,13 @@ public class GuestController implements Initializable {
                     new Alert(Alert.AlertType.ERROR, "❌ Guest saving failed").show();
                 }
             }
-        } catch (ParseException e) {
+        } catch (ParseException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Error saving guest: " + e.getMessage()).show();
         }
     }
 
-    private void resetPage() {
+    private void resetPage() throws SQLException, ClassNotFoundException {
         lblGuestId.setText(GuestModel.getNextGuestId());
         txtName.clear();
         dpDOB.setValue(null);
@@ -188,6 +189,12 @@ public class GuestController implements Initializable {
         cmLoyaltyStatus.setItems(FXCollections.observableArrayList("Bronze", "Silver", "Gold"));
         dpRegistrationDate.setValue(java.time.LocalDate.now());
 
-        lblGuestId.setText(GuestModel.getNextGuestId());
+        try {
+            lblGuestId.setText(GuestModel.getNextGuestId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

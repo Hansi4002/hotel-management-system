@@ -61,20 +61,18 @@ public class ReservationTableController implements Initializable {
 
     public void btnAddNewReservationOnAction(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ReservationDetailView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ReservationView.fxml"));
             Parent load = loader.load();
-            ReservationTableController controller = loader.getController();
-            controller.setReservationController(this);
+            ReservationController controller = loader.getController();
+            controller.setReservationTableController(this);
             Stage stage = new Stage();
             stage.setScene(new Scene(load));
-            stage.setTitle("Add Reservation");
+            stage.setTitle("Add New Reservation");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to open Add Reservation window").show();
         }
-    }
-
-    private void setReservationController(ReservationTableController reservationTableController) {
     }
 
     public void btnEditOnAction(ActionEvent actionEvent) {
@@ -85,7 +83,7 @@ public class ReservationTableController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ReservationDetailView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ReservationView.fxml"));
             Parent load = loader.load();
 
             ReservationController controller = loader.getController();
@@ -115,7 +113,7 @@ public class ReservationTableController implements Initializable {
         }
     }
 
-    private void loadReservationData() {
+    void loadReservationData() {
         try {
             List<ReservationDTO> reservationList = reservationModel.getAllReservations();
             List<ReservationTM> tmList = reservationList.stream().map(dto -> new ReservationTM(

@@ -14,7 +14,7 @@ public class ReservationDTO {
     private String roomID;
     private Date checkInDate;
     private Date checkOutDate;
-    private Timestamp bookingTime;;
+    private Timestamp bookingTime;
     private int numberOfGuests;
     private String status;
     private double totalCost;
@@ -47,9 +47,7 @@ public class ReservationDTO {
 
     public Date getCheckOutDate() {return checkOutDate;}
 
-    public String getBookingTime() {
-        return bookingTime;
-    }
+    public Timestamp getBookingTime() {return bookingTime;}
 
     public int getNumberOfGuests() {
         return numberOfGuests;

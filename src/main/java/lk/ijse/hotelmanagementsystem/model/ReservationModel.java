@@ -10,18 +10,19 @@ import java.util.List;
 public class ReservationModel {
 
     public static String getNextReservationId() throws SQLException, ClassNotFoundException {
-        String sql =("SELECT reservation_id FROM reservation ORDER BY reservation_id DESC LIMIT 1");
+        String sql = "SELECT reservation_id FROM reservation WHERE reservation_id REGEXP '^RES[0-9]{3}$' ORDER BY CAST(SUBSTRING(reservation_id, 4) AS UNSIGNED) DESC LIMIT 1";
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 String lastId = rs.getString(1);
-                int lastIdNumberInt = Integer.parseInt(lastId.substring(1));
+                int lastIdNumberInt = Integer.parseInt(lastId.substring(3));
                 int nextId = lastIdNumberInt + 1;
-                return String.format("RE%03d", nextId);
-            }else {
-                return "RE001";
+                String newId = String.format("RES%03d", nextId);
+                return newId;
+            } else {
+                return "RES001";
             }
         }
     }
@@ -35,14 +36,14 @@ public class ReservationModel {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                ReservationDTO reservation =new ReservationDTO(
+                ReservationDTO reservation = new ReservationDTO(
                         rs.getString("reservation_id"),
                         rs.getString("guest_id"),
                         rs.getString("room_id"),
                         rs.getDate("check_in_date"),
                         rs.getDate("check_out_date"),
                         rs.getTimestamp("booking_time"),
-                        rs.getInt("number_of_guests"),
+                        rs.getInt("num_guests"),
                         rs.getString("status"),
                         rs.getDouble("total_cost")
                 );
@@ -51,8 +52,9 @@ public class ReservationModel {
         }
         return reservationList;
     }
-    public static boolean saveReservation(ReservationDTO dto) throws SQLException, ClassNotFoundException {
-        String sql = "INSERT INTO reservation(reservation_id, guest_id, room_id, check_in_date, check_out_date, booking_time, number_of_guests, status, total_cost) VALUES(?,?,?,?,?,?,?,?,?)";
+
+    public static boolean saveReservation(ReservationDTO dto) throws SQLException {
+        String sql = "INSERT INTO reservation (reservation_id, guest_id, room_id, check_in_date, check_out_date, booking_time, num_guests, status, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stm = con.prepareStatement(sql)) {
 
@@ -61,7 +63,7 @@ public class ReservationModel {
             stm.setString(3, dto.getRoomId());
             stm.setDate(4, dto.getCheckInDate());
             stm.setDate(5, dto.getCheckOutDate());
-            stm.setTimestamp(6, Timestamp.valueOf(dto.getBookingTime()));
+            stm.setTimestamp(6, dto.getBookingTime());
             stm.setInt(7, dto.getNumberOfGuests());
             stm.setString(8, dto.getStatus());
             stm.setDouble(9, dto.getTotalCost());
@@ -70,19 +72,19 @@ public class ReservationModel {
         }
     }
 
-    public boolean deleteReservation(String reservationId) throws SQLException {
+    public boolean deleteReservation(String reservationId) throws SQLException{
         String sql = "DELETE FROM reservation WHERE reservation_id=?";
 
-                try (Connection con = DBConnection.getInstance().getConnection();
-                     PreparedStatement stm = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getInstance().getConnection();
+             PreparedStatement stm = con.prepareStatement(sql)) {
 
-                    stm.setString(1, reservationId);
-                    return stm.executeUpdate() > 0;
-                }
+            stm.setString(1, reservationId);
+            return stm.executeUpdate() > 0;
+        }
     }
 
     public boolean updateReservation(ReservationDTO dto) throws SQLException {
-        String sql = "UPDATE reservation SET guest_id=?, room_id=?, check_in_date=?, check_out_date=?, booking_time=?, number_of_guests=?, status=?, total_cost=? WHERE reservation_id=?";
+        String sql = "UPDATE reservation SET guest_id=?, room_id=?, check_in_date=?, check_out_date=?, booking_time=?, num_guests=?, status=?, total_cost=? WHERE reservation_id=?";
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stm = con.prepareStatement(sql)) {
 
@@ -90,7 +92,7 @@ public class ReservationModel {
             stm.setString(2, dto.getRoomId());
             stm.setDate(3, dto.getCheckInDate());
             stm.setDate(4, dto.getCheckOutDate());
-            stm.setTimestamp(5, Timestamp.valueOf(dto.getBookingTime()));
+            stm.setTimestamp(5, dto.getBookingTime());
             stm.setInt(6, dto.getNumberOfGuests());
             stm.setString(7, dto.getStatus());
             stm.setDouble(8, dto.getTotalCost());
@@ -100,7 +102,7 @@ public class ReservationModel {
         }
     }
 
-    public static List<String> loadGuestIds() throws SQLException {
+    public static List<String> loadGuestIds() throws SQLException{
         List<String> guestIds = new ArrayList<>();
         String sql = "SELECT guest_id FROM guest";
 
@@ -115,8 +117,7 @@ public class ReservationModel {
         return guestIds;
     }
 
-
-    public static List<String> loadRoomIds() throws SQLException{
+    public static List<String> loadRoomIds() throws SQLException {
         List<String> roomIds = new ArrayList<>();
         String sql = "SELECT room_id FROM room";
 
@@ -130,5 +131,4 @@ public class ReservationModel {
         }
         return roomIds;
     }
-
 }

@@ -81,7 +81,7 @@ public class GuestTableController implements Initializable {
 
     public void btnAddNewGuestOnAction(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GuestDetailView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GuestView.fxml"));
             Parent load = loader.load();
             GuestController controller = loader.getController();
             controller.setGuestTableController(this);
@@ -104,7 +104,7 @@ public class GuestTableController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GuestDetailView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GuestView.fxml"));
             Parent load = loader.load();
 
             GuestController controller = loader.getController();
