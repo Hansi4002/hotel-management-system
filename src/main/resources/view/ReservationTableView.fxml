@@ -17,39 +17,8 @@
    <children>
       <BorderPane prefHeight="800.0" prefWidth="1190.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <HBox alignment="BOTTOM_LEFT" prefHeight="60.0" prefWidth="1000.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
-               </padding>
-               <children>
-                  <Label text="PulseHorizon Hotel" textFill="WHITE">
-                     <font>
-                        <Font name="Segoe UI Bold" size="24.0" />
-                     </font>
-                  </Label>
-                  <Region prefHeight="30.0" prefWidth="590.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefHeight="46.0" prefWidth="106.0" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Log Out" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
+            <fx:include source="NavigationBar.fxml" />
          </top>
-         <left>
-            <VBox prefHeight="702.0" prefWidth="242.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-               </padding>
-               <children>
-                  <Label lineSpacing="20.0" prefHeight="42.0" prefWidth="222.0" text="DAILY OPERATION" textFill="#ecf0f1">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </VBox>
-         </left>
          <bottom>
             <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1000.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
                <children>
@@ -93,7 +62,7 @@
                                     <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
                                  </padding>
                               </Button>
-                              <Button fx:id="btnAddRoom" mnemonicParsing="false" onAction="#btnAddNewReservationOnAction" style="-fx-background-color: #27ae60; -fx-background-radius: 4;" text="Add New Room" textFill="WHITE">
+                              <Button fx:id="btnAddReservation" mnemonicParsing="false" onAction="#btnAddNewReservationOnAction" style="-fx-background-color: #27ae60; -fx-background-radius: 4;" text="Add New Room" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>

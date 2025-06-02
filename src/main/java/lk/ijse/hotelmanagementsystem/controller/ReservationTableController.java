@@ -37,6 +37,8 @@ public class ReservationTableController implements Initializable {
     public Button btnEdit;
 
     private final ReservationModel reservationModel = new ReservationModel();
+    public Button btnCancel;
+    public Button btnAddReservation;
 
     public void btnLogoutOnAction(ActionEvent actionEvent) {
         Stage stage = (Stage) btnLogout.getScene().getWindow();

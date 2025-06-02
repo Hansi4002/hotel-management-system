@@ -32,10 +32,6 @@ public class RoomController implements Initializable {
     public TableColumn<RoomTM, Integer> colCapacity;
     public TableColumn<RoomTM, String> colDescription;
     public TableColumn<RoomTM, String> colRoomNumber;
-    public Hyperlink linkProfile;
-    public Hyperlink linkReservations;
-    public Hyperlink linkOrders;
-    public Hyperlink linkReviews;
     public Button btnEdit;
 
     private final RoomModel roomModel = new RoomModel();
@@ -89,40 +85,6 @@ public class RoomController implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) btnLogout.getScene().getWindow();
-        stage.close();
-    }
-
-    public void goToProfile(ActionEvent actionEvent) {
-        loadPage("/view/UserProfile.fxml", "Profile");
-    }
-
-    public void goToReservations(ActionEvent actionEvent) {
-        loadPage("/view/Reservation.fxml", "Reservations");
-    }
-
-    public void goToOrders(ActionEvent actionEvent) {
-        loadPage("/view/FoodOrder.fxml", "Food Orders");
-    }
-
-    public void goToReviews(ActionEvent actionEvent) {
-        loadPage("/view/Feedback.fxml", "Feedback");
-    }
-
-    private void loadPage(String path, String title) {
-        try {
-            Parent load = FXMLLoader.load(getClass().getResource(path));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(load));
-            stage.setTitle(title);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Page Load Failed!").show();
         }
     }
 

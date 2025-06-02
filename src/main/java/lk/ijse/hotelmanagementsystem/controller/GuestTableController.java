@@ -22,10 +22,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GuestTableController implements Initializable {
-    public Hyperlink linkProfile;
-    public Hyperlink linkReservations;
-    public Hyperlink linkOrders;
-    public Hyperlink linkReviews;
     public Button btnLogout;
     public Button btnCancel;
     public Button btnEdit;
@@ -157,39 +153,5 @@ public class GuestTableController implements Initializable {
                 }
             }
         });
-    }
-
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) btnLogout.getScene().getWindow();
-        stage.close();
-    }
-
-    public void goToProfile(ActionEvent actionEvent) {
-        loadPage("/view/UserProfile.fxml", "Profile");
-    }
-
-    public void goToReservations(ActionEvent actionEvent) {
-        loadPage("/view/Reservation.fxml", "Reservations");
-    }
-
-    public void goToOrders(ActionEvent actionEvent) {
-        loadPage("/view/FoodOrder.fxml", "Food Orders");
-    }
-
-    public void goToReviews(ActionEvent actionEvent) {
-        loadPage("/view/Feedback.fxml", "Feedback");
-    }
-
-    private void loadPage(String path, String title) {
-        try {
-            Parent load = FXMLLoader.load(getClass().getResource(path));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(load));
-            stage.setTitle(title);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Page Load Failed!").show();
-        }
     }
 }
