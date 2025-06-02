@@ -39,7 +39,6 @@ public class RoomController implements Initializable {
     public Button btnEdit;
 
     private final RoomModel roomModel = new RoomModel();
-    private final RoomDTO roomDTO = new RoomDTO();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,7 +55,7 @@ public class RoomController implements Initializable {
         loadRoomData();
     }
 
-    private void loadRoomData() {
+    void loadRoomData() {
         try {
             List<RoomDTO> roomList = roomModel.getAllRooms();
             List<RoomTM> roomTMs = roomList.stream().map(dto -> new RoomTM(
@@ -80,7 +79,10 @@ public class RoomController implements Initializable {
 
     public void btnAddNewRoomOnAction(ActionEvent actionEvent) {
         try {
-            Parent load = FXMLLoader.load(getClass().getResource("/view/RoomDetailView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RoomDetailView.fxml"));
+            Parent load = loader.load();
+            RoomDetailController controller = loader.getController();
+            controller.setRoomController(this);
             Stage stage = new Stage();
             stage.setScene(new Scene(load));
             stage.setTitle("Add New Room");
@@ -135,10 +137,8 @@ public class RoomController implements Initializable {
         confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 try {
-                    // Delete the room from the database
                     boolean isDeleted = roomModel.deleteRoom(selectedRoom.getRoomId());
                     if (isDeleted) {
-                        // Remove the room from the TableView
                         tblRoom.getItems().remove(selectedRoom);
                         new Alert(Alert.AlertType.INFORMATION, "Room deleted successfully").show();
                     } else {
@@ -165,7 +165,6 @@ public class RoomController implements Initializable {
             Parent load = loader.load();
 
             RoomDetailController controller = loader.getController();
-
             controller.setRoomData(new RoomDTO(
                     selectedRoom.getRoomId(),
                     selectedRoom.getRoomType(),
@@ -188,5 +187,4 @@ public class RoomController implements Initializable {
             new Alert(Alert.AlertType.ERROR, "Failed to open Edit Room window").show();
         }
     }
-
 }

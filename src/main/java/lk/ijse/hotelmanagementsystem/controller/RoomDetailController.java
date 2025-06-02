@@ -3,6 +3,7 @@ package lk.ijse.hotelmanagementsystem.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.RoomDTO;
 import lk.ijse.hotelmanagementsystem.model.RoomModel;
 
@@ -27,6 +28,9 @@ public class RoomDetailController implements Initializable {
     public Button btnSave;
     private RoomModel roomModel = new RoomModel();
     private String roomIDValidation = "^R\\d{3}$";
+    private boolean isEditMode = false;
+    private String existingRoomId = null;
+    private RoomController roomController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,6 +118,11 @@ public class RoomDetailController implements Initializable {
                 return;
             }
 
+            if (!roomId.matches(roomIDValidation)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid Room ID format (e.g., R001)").show();
+                return;
+            }
+
             RoomDTO roomDTO = new RoomDTO(
                     roomId,
                     roomType,
@@ -125,14 +134,26 @@ public class RoomDetailController implements Initializable {
                     roomNumber
             );
 
-            System.out.println("🔧 Saving room: " + roomDTO);
-
-            boolean isSaved = roomModel.saveRoom(roomDTO);
-            if (isSaved) {
-                resetPage();
-                new Alert(Alert.AlertType.INFORMATION, "✅ Room saved successfully").show();
+            if (isEditMode) {
+                boolean isUpdated = roomModel.updateRoom(roomDTO);
+                if (isUpdated) {
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Room updated successfully").show();
+                    Stage stage = (Stage) btnSave.getScene().getWindow();
+                    stage.close();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "❌ Failed to update room").show();
+                }
             } else {
-                new Alert(Alert.AlertType.ERROR, "❌ Room saving failed").show();
+                boolean isSaved = roomModel.saveRoom(roomDTO);
+                if (isSaved) {
+                    resetPage();
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Room saved successfully").show();
+                    if (roomController != null) {
+                        roomController.loadRoomData();
+                    }
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "❌ Room saving failed").show();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,7 +175,81 @@ public class RoomDetailController implements Initializable {
         }
     }
 
+    public void btnEditOnAction(ActionEvent actionEvent) {
+        if (!isEditMode) {
+            new Alert(Alert.AlertType.WARNING, "⚠ Edit mode not active. Please select a room to edit.").show();
+            return;
+        }
+
+        try {
+            String roomId = lblRoomId.getText();
+            String roomType = cmRoomType.getSelectionModel().getSelectedItem().toString();
+            String priceText = txtPrice.getText();
+            String status = cmStatus.getSelectionModel().getSelectedItem().toString();
+            String floorNumber = cmFloorNumber.getSelectionModel().getSelectedItem().toString();
+            String capacityText = cmCapacity.getSelectionModel().getSelectedItem().toString();
+            String description = txtDescription.getText();
+            String roomNumber = txtRoomNumber.getText();
+
+            if (roomId.isEmpty() || roomType == null || priceText.isEmpty() || status == null ||
+                    floorNumber == null || capacityText == null || roomNumber.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
+                return;
+            }
+
+            double price;
+            int capacity;
+
+            try {
+                price = Double.parseDouble(priceText);
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid price").show();
+                return;
+            }
+
+            try {
+                capacity = Integer.parseInt(capacityText);
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid capacity").show();
+                return;
+            }
+
+            if (!roomId.matches(roomIDValidation)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid Room ID format (e.g., R001)").show();
+                return;
+            }
+
+            RoomDTO roomDTO = new RoomDTO(
+                    roomId,
+                    roomType,
+                    price,
+                    status,
+                    floorNumber,
+                    capacity,
+                    description,
+                    roomNumber
+            );
+
+            boolean isUpdated = roomModel.updateRoom(roomDTO);
+            if (isUpdated) {
+                new Alert(Alert.AlertType.INFORMATION, "✅ Room updated successfully").show();
+                if (roomController != null) {
+                    roomController.loadRoomData();
+                }
+                Stage stage = (Stage) btnEdit.getScene().getWindow();
+                stage.close();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "❌ Failed to update room").show();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "❌ Error updating room: " + e.getMessage()).show();
+        }
+    }
+
     public void setRoomData(RoomDTO roomDTO) {
+        isEditMode = true;
+        existingRoomId = roomDTO.getRoomId();
         if (roomDTO != null) {
             lblRoomId.setText(roomDTO.getRoomId());
             cmRoomType.setValue(roomDTO.getRoomType());
@@ -183,5 +278,10 @@ public class RoomDetailController implements Initializable {
         } else {
             new Alert(Alert.AlertType.ERROR, "❌ No room data provided").show();
         }
+        lblRoomId.setDisable(true);
+    }
+
+    public void setRoomController(RoomController roomController) {
+        this.roomController = roomController;
     }
 }
