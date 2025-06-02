@@ -1,17 +1,32 @@
 package lk.ijse.hotelmanagementsystem.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class FoodDTO {
     private String menuId;
-    private boolean available;
+    private String available;
     private String category;
-    private Double price;
+    private double price;
     private String itemName;
     private String description;
+
+    public FoodDTO(String menuId, String itemName, String description, String category, String available, double price) {
+        this.menuId = menuId;
+        this.itemName = itemName;
+        this.description = description;
+        this.category = category;
+        this.available = available;
+        this.price = price;
+    }
+
+    public String getAvailable() {
+        return available;
+    }
 }

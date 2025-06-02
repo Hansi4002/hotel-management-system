@@ -48,7 +48,7 @@
                      <items>
                         <MenuItem fx:id="menuGuest" onAction="#navigateToView" text="Guest" userData="GuestView.fxml" />
                         <MenuItem fx:id="menuRoom" onAction="#navigateToView" text="Room" userData="RoomView.fxml" />
-                        <MenuItem fx:id="menuReservation" onAction="#navigateToView" text="Reservation" userData="ReservationsView.fxml" />
+                        <MenuItem fx:id="menuReservation" onAction="#navigateToView" text="Reservation" userData="reservation.fxml" />
                      </items>
                   </Menu>
                   <Menu>

@@ -36,23 +36,6 @@
                </children>
             </HBox>
          </top>
-         <left>
-            <VBox prefHeight="702.0" prefWidth="242.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-               <padding>
-                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-               </padding>
-               <children>
-                  <Label lineSpacing="20.0" prefHeight="42.0" prefWidth="222.0" text="DAILY OPERATION" textFill="#ecf0f1">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </VBox>
-         </left>
          <bottom>
             <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1000.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
                <children>
@@ -75,7 +58,7 @@
                <children>
                   <VBox spacing="10.0" style="-fx-background-color: #ffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
                      <children>
-                        <HBox alignment="CENTER_LEFT">
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="FEEDBACK LIST" textFill="#2c3e50">
                                  <font>
@@ -83,7 +66,23 @@
                                  </font>
                               </Label>
                               <Region HBox.hgrow="ALWAYS" />
-                              <Button fx:id="btnAddFeedback" mnemonicParsing="false" onAction="#btnAddNewFeedbackOnAction" style="-fx-background-color: #27ae60; -fx-background-radius: 4;" text="Add New Feedback" textFill="WHITE">
+                              <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelOnAction" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Cancel" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                                 </padding>
+                              </Button>
+                              <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnEditOnAction" style="-fx-background-color: #f39c12; -fx-background-radius: 4;" text="Edit" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                                 </padding>
+                              </Button>
+                              <Button fx:id="btnAddFeedback" mnemonicParsing="false" onAction="#btnAddNewFeedbackOnAction" prefHeight="34.0" prefWidth="139.0" style="-fx-background-color: #27ae60; -fx-background-radius: 4;" text="Add New Feedback" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>

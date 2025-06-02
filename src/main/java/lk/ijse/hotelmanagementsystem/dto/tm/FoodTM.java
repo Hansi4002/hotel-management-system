@@ -2,13 +2,13 @@ package lk.ijse.hotelmanagementsystem.dto.tm;
 
 public class FoodTM {
     private String menuId;
-    private boolean available;
+    private String available;
     private String category;
-    private Double price;
+    private double price;
     private String itemName;
     private String description;
 
-    public FoodTM(String menuId, boolean available, String category, Double price, String itemName, String description) {
+    public FoodTM(String menuId, String itemName, String description, String category, String available, double price) {
         this.menuId = menuId;
         this.available = available;
         this.category = category;
@@ -21,7 +21,7 @@ public class FoodTM {
         return menuId;
     }
 
-    public boolean isAvailable() {
+    public String getAvailable() {
         return available;
     }
 
@@ -29,7 +29,7 @@ public class FoodTM {
         return category;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -39,5 +39,29 @@ public class FoodTM {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public void setAvailable(String available) {
+        this.available = available;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

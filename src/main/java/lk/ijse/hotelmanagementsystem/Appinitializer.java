@@ -12,10 +12,11 @@ import java.io.IOException;
 public class Appinitializer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent load = FXMLLoader.load(getClass().getResource("/view/ReservationTableView.fxml"));
-        Scene scene = new Scene(load);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FoodTableView.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Hotel Management System");
+        stage.setTitle("Food Management");
         stage.show();
     }
 
