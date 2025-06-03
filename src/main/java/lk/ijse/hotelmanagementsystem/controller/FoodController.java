@@ -142,10 +142,6 @@ public class FoodController implements Initializable {
         lblMenuId.setDisable(false);
     }
 
-    public void setFoodTableController(FoodTableController foodTableController) {
-        this.foodTableController = foodTableController;
-    }
-
     public void setFoodData(FoodDTO foodDTO) {
         isEditMode = true;
         existingMenuId = foodDTO.getMenuId();
@@ -168,5 +164,9 @@ public class FoodController implements Initializable {
         } else {
             new Alert(Alert.AlertType.ERROR, "❌ No food data provided").show();
         }
+    }
+
+    public void setFoodTableController(FoodTableController foodTableController) {
+        this.foodTableController = foodTableController;
     }
 }

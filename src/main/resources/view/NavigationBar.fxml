@@ -46,9 +46,9 @@
                         <Label prefHeight="20.0" prefWidth="65.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Booking" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuGuest" onAction="#navigateToView" text="Guest" userData="GuestView.fxml" />
+                        <MenuItem fx:id="menuGuest" onAction="#navigateToView" text="Guest" userData="GuestTableView.fxml" />
                         <MenuItem fx:id="menuRoom" onAction="#navigateToView" text="Room" userData="RoomView.fxml" />
-                        <MenuItem fx:id="menuReservation" onAction="#navigateToView" text="Reservation" userData="reservation.fxml" />
+                        <MenuItem fx:id="menuReservation" onAction="#navigateToView" text="Reservation" userData="reservationTableView.fxml" />
                      </items>
                   </Menu>
                   <Menu>
@@ -56,9 +56,9 @@
                         <Label prefHeight="20.0" prefWidth="49.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Order" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuFood" onAction="#navigateToView" text="Food" userData="FoodView.fxml" />
-                        <MenuItem fx:id="menuFoodOrder" onAction="#navigateToView" text="Food Order" userData="FoodOrderView.fxml" />
-                        <MenuItem fx:id="menuFoodOrderDetails" onAction="#navigateToView" text="Food Order Details" userData="FoodOrderDetailsView.fxml" />
+                        <MenuItem fx:id="menuFood" onAction="#navigateToView" text="Food" userData="FoodTableView.fxml" />
+                        <MenuItem fx:id="menuFoodOrder" onAction="#navigateToView" text="Food Order" userData="FoodOrderTableView.fxml" />
+                        <MenuItem fx:id="menuFoodOrderDetails" onAction="#navigateToView" text="Food Order Details" userData="FoodOrderDetailView.fxml" />
                      </items>
                   </Menu>
                   <Menu>
@@ -66,8 +66,8 @@
                         <Label prefHeight="20.0" prefWidth="68.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Supplier" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuSupplier" onAction="#navigateToView" text="Supplier" userData="SupplierView.fxml" />
-                        <MenuItem fx:id="menuSupplierFood" onAction="#navigateToView" text="Supplier Food" userData="SupplierFoodView.fxml" />
+                        <MenuItem fx:id="menuSupplier" onAction="#navigateToView" text="Supplier" userData="SupplierTableView.fxml" />
+                        <MenuItem fx:id="menuSupplierFood" onAction="#navigateToView" text="Supplier Food" userData="SupplierFoodTableView.fxml" />
                      </items>
                   </Menu>
                   <Menu>
@@ -75,7 +75,7 @@
                         <Label prefHeight="20.0" prefWidth="67.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Payment" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuPayment" onAction="#navigateToView" text="Payment" userData="PaymentView.fxml" />
+                        <MenuItem fx:id="menuPayment" onAction="#navigateToView" text="Payment" userData="PaymentTableView.fxml" />
                      </items>
                   </Menu>
                   <Menu>

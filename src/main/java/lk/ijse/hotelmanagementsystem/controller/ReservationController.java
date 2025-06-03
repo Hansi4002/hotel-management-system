@@ -47,7 +47,7 @@ public class ReservationController implements Initializable {
             lblReservationId.setText(nextId);
             cmGuestId.setItems(FXCollections.observableArrayList(reservationModel.loadGuestIds()));
             cmRoomId.setItems(FXCollections.observableArrayList(reservationModel.loadRoomIds()));
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to initialize reservation data: " + e.getMessage()).show();
             lblReservationId.setText("ERROR");
@@ -66,7 +66,6 @@ public class ReservationController implements Initializable {
             String status = cmStatus.getSelectionModel().getSelectedItem();
             String totalCostStr = txtTotalCost.getText();
 
-            // Validate inputs
             if (reservationId.isEmpty() || guestId == null || roomId == null || checkInLocal == null ||
                     checkOutLocal == null || bookingTimeStr.isEmpty() || numberOfGuestsStr.isEmpty() ||
                     status == null || totalCostStr.isEmpty()) {
@@ -200,7 +199,7 @@ public class ReservationController implements Initializable {
             btnCancel.setDisable(false);
             isEditMode = false;
             lblReservationId.setDisable(false);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to reset form: " + e.getMessage()).show();
             lblReservationId.setText("ERROR");

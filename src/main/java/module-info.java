@@ -5,6 +5,7 @@ module lk.ijse.hotelmanagementsystem {
     requires static lombok;
     requires mysql.connector.j;
     requires javafx.graphics;
+    requires java.management;
 
     opens lk.ijse.hotelmanagementsystem.controller to javafx.fxml;
     opens lk.ijse.hotelmanagementsystem.dto.tm to javafx.base;

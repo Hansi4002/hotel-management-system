@@ -1,7 +1,6 @@
 package lk.ijse.hotelmanagementsystem;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +11,7 @@ import java.io.IOException;
 public class Appinitializer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FoodTableView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FoodOrderTableView.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);

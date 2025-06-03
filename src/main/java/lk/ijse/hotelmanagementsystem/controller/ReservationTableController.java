@@ -132,7 +132,7 @@ public class ReservationTableController implements Initializable {
 
             ObservableList<ReservationTM> observableList = FXCollections.observableArrayList(tmList);
             tblReservation.setItems(observableList);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to load reservation data").show();
         }

@@ -1,18 +1,32 @@
 package lk.ijse.hotelmanagementsystem.model;
 
+import lk.ijse.hotelmanagementsystem.db.DBConnection;
 import lk.ijse.hotelmanagementsystem.dto.UserDTO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LogInPageModel {
 
-    public boolean cheackUser(UserDTO userDTO) {
-        //Select username from user where username = 'userDTO.getUsername()'
+    public static UserDTO login(String email, String password) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
 
-        return true;
-    }
+        String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, email);
+        statement.setString(2, password);
 
-    public UserDTO getUserDetails(UserDTO userDTO) {
-        //select * from user were  username = 'userDTO.getUsername()'
+        ResultSet resultSet = statement.executeQuery();
 
-        return userDTO;
+        if (resultSet.next()) {
+            String userId = resultSet.getString("user_id");
+            String role = resultSet.getString("role");
+
+            return new UserDTO(userId, email, password, role);
+        }
+
+        return null; 
     }
 }

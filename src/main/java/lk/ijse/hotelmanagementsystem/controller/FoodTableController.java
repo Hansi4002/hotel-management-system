@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class FoodTableController implements Initializable {
-    public Button btnLogout;
-    public Button btnAddFood;
     public TableView<FoodTM> tblFood;
     public TableColumn<FoodTM, String> colMenuId;
     public TableColumn<FoodTM, String> colAvailable;
@@ -34,10 +32,10 @@ public class FoodTableController implements Initializable {
     public Button btnEdit;
 
     private final FoodModel foodModel = new FoodModel();
+    public Button btnAddFood;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Set up TableColumn mappings
         colMenuId.setCellValueFactory(new PropertyValueFactory<>("menuId"));
         colAvailable.setCellValueFactory(new PropertyValueFactory<>("available"));
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
@@ -67,22 +65,6 @@ public class FoodTableController implements Initializable {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to load food data").show();
-        }
-    }
-
-    public void btnAddNewFoodOnAction(ActionEvent actionEvent) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FoodView.fxml"));
-            Parent load = loader.load();
-            FoodController controller = loader.getController();
-            controller.setFoodTableController(this);
-            Stage stage = new Stage();
-            stage.setScene(new Scene(load));
-            stage.setTitle("Add New Food");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "❌ Failed to open Add Food window").show();
         }
     }
 
@@ -149,27 +131,19 @@ public class FoodTableController implements Initializable {
         }
     }
 
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to logout?",
-                ButtonType.YES, ButtonType.NO);
-        confirmation.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                try {
-                    Stage currentStage = (Stage) btnLogout.getScene().getWindow();
-                    currentStage.close();
-
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
-                    Parent load = loader.load();
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(load));
-                    stage.setTitle("Login");
-                    stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    new Alert(Alert.AlertType.ERROR, "❌ Failed to open login window").show();
-                }
-            }
-        });
+    public void btnAddNewFoodOnAction(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FoodView.fxml"));
+            Parent load = loader.load();
+            FoodController controller = loader.getController();
+            controller.setFoodTableController(this);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(load));
+            stage.setTitle("Add New Food");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "❌ Failed to open Add Food window").show();
+        }
     }
 }

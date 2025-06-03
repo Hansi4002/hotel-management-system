@@ -117,11 +117,12 @@ public class GuestController implements Initializable {
             } else {
                 boolean isSaved = guestModel.saveGuest(guestDTO);
                 if (isSaved) {
-                    resetPage();
                     new Alert(Alert.AlertType.INFORMATION, "✅ Guest saved successfully").show();
                     if (guestTableController != null) {
                         guestTableController.loadGuestData();
                     }
+                    Stage stage = (Stage) btnSave.getScene().getWindow();
+                    stage.close();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "❌ Guest saving failed").show();
                 }
@@ -149,6 +150,7 @@ public class GuestController implements Initializable {
     }
 
     public void setGuestTableController(GuestTableController guestTableController) {
+        this.guestTableController = guestTableController;
     }
 
     public void setGuestData(GuestDTO guestDTO) {
@@ -157,7 +159,6 @@ public class GuestController implements Initializable {
         if (guestDTO != null) {
             lblGuestId.setText(guestDTO.getGuestId());
             txtName.setText(guestDTO.getName());
-            // Convert Date to LocalDate for DatePicker
             if (guestDTO.getDob() != null) {
                 dpDOB.setValue(java.time.LocalDate.parse(dateFormat.format(guestDTO.getDob())));
             }
@@ -191,9 +192,7 @@ public class GuestController implements Initializable {
 
         try {
             lblGuestId.setText(GuestModel.getNextGuestId());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
