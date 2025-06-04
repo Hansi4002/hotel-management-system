@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MaintenanceDTO {
-    private String maintananceId;
+    private String maintenanceId;
     private String roomId;
     private String staffId;
     private String description;
