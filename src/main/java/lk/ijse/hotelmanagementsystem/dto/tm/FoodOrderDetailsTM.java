@@ -11,7 +11,7 @@ public class FoodOrderDetailsTM {
 
     public FoodOrderDetailsTM(String menuId, String orderId, Object itemPrice, int quantity) {
         this.quantity = quantity;
-        this.price = price;
+        this.price = (double) itemPrice;
         this.orderId = orderId;
         this.menuId = menuId;
     }
