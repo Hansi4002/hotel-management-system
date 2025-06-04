@@ -32,13 +32,16 @@ public class FoodController implements Initializable {
     private String priceValidation = "^\\d+(\\.\\d{1,2})?$";
     private String itemNameValidation = "^[A-Za-z0-9\\s]+$";
 
-    @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cmAvailable.setItems(FXCollections.observableArrayList("Available", "Not Available"));
         cmCategory.setItems(FXCollections.observableArrayList("Main Course", "Dessert", "Beverage", "Appetizer"));
 
-        lblMenuId.setText(FoodModel.getNextMenuId());
+        try {
+            lblMenuId.setText(FoodModel.getNextMenuId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void btnCancelOnAction(ActionEvent actionEvent) {

@@ -6,7 +6,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class SupplierFoodTableController {
-    public Button btnLogout;
+    public Button btnCancel;
+    public Button btnEdit;
     public Button btnAddSupplierFood;
     public TableView tblSupplierFood;
     public TableColumn colMenuId;
@@ -15,7 +16,10 @@ public class SupplierFoodTableController {
     public TableColumn colQuantity;
     public TableColumn colSupplyDate;
 
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
+    public void btnCancelOnAction(ActionEvent actionEvent) {
+    }
+
+    public void btnEditOnAction(ActionEvent actionEvent) {
     }
 
     public void btnAddNewSupplierFoodOnAction(ActionEvent actionEvent) {
