@@ -15,4 +15,7 @@ public class SupplierFoodDTO {
     private double cost;
     private int quantity;
     private Date supplyDate;
+
+    public SupplierFoodDTO(String menuId, String supplierId, double costDouble, int quantityInt) {
+    }
 }
