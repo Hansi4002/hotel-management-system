@@ -9,10 +9,9 @@ public class DBConnection {
     private static DBConnection dbConnection;
     private Connection connection;
 
-    // Database credentials (modify according to your setup)
-    private static final String URL = "jdbc:mysql://localhost:3306/hotelmanagementsystem"; // ✅ Replace with your DB name
-    private static final String USERNAME = "root"; // ✅ Replace with your DB username
-    private static final String PASSWORD = "mySQL"; // ✅ Replace with your DB password
+    private static final String URL = "jdbc:mysql://localhost:3306/hotelmanagementsystem";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "mySQL";
 
     private DBConnection() throws SQLException {
         this.connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);

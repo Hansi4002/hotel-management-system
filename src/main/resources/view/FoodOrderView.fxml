@@ -43,7 +43,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <Label prefHeight="26.0" prefWidth="338.0" text="FOOD ORDER DETAILS" textFill="#2c3e50">
+                              <Label prefHeight="26.0" prefWidth="338.0" text="CUSTOMER ORDER" textFill="#2c3e50">
                                  <font>
                                     <Font name="System Bold" size="16.0" />
                                  </font>

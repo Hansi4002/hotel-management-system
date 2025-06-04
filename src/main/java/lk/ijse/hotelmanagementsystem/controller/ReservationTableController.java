@@ -40,11 +40,6 @@ public class ReservationTableController implements Initializable {
     public Button btnCancel;
     public Button btnAddReservation;
 
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) btnLogout.getScene().getWindow();
-        stage.close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colReservationId.setCellValueFactory(new PropertyValueFactory<>("reservationId"));

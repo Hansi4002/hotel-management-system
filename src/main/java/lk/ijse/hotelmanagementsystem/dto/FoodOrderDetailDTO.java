@@ -12,4 +12,8 @@ public class FoodOrderDetailDTO {
     private String orderId;
     private double price;
     private int quantity;
+
+    public Object getItemPrice() {
+        return price;
+    }
 }
