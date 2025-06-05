@@ -16,5 +16,7 @@ public class StaffDTO {
     private String position;
     private String contact;
     private Date hireDate;
-    private String status;
+
+    public StaffDTO(String staffId, String name, Object role, String contact, Object email, Object address) {
+    }
 }

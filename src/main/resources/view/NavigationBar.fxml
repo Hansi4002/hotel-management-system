@@ -6,28 +6,29 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" prefWidth="1190.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.NavigationBarController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.NavigationBarController">
    <children>
-      <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="90.0" prefWidth="1000.0" spacing="10.0" style="-fx-background-color: #096B68;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #096B68;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
             <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
          </padding>
          <children>
-            <Label prefHeight="30.0" prefWidth="342.0" text="PulseHorizon Hotel" textFill="WHITE">
+            <Label text="PulseHorizon Hotel" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="24.0" />
                </font>
             </Label>
-            <MenuBar fx:id="menuBar" prefHeight="28.0" prefWidth="782.0" style="-fx-background-color: transparent;">
+            <MenuBar fx:id="menuBar" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
                <menus>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="69.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Home" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Home" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuHome" onAction="#navigateToView" text="Home" userData="HomeView.fxml" />
@@ -35,7 +36,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="55.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Profile" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Profile" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuProfile" onAction="#navigateToView" text="Profile" userData="ProfileView.fxml" />
@@ -43,7 +44,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="65.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Booking" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Booking" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuGuest" onAction="#navigateToView" text="Guest" userData="GuestTableView.fxml" />
@@ -53,7 +54,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="49.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Order" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Order" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuFood" onAction="#navigateToView" text="Food" userData="FoodTableView.fxml" />
@@ -63,7 +64,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="68.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Supplier" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Supplier" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuSupplier" onAction="#navigateToView" text="Supplier" userData="SupplierTableView.fxml" />
@@ -72,7 +73,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="67.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Payment" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Payment" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuPayment" onAction="#navigateToView" text="Payment" userData="PaymentTableView.fxml" />
@@ -80,7 +81,7 @@
                   </Menu>
                   <Menu>
                      <graphic>
-                        <Label prefHeight="20.0" prefWidth="110.0" style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Maintenance" />
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Maintenance" />
                      </graphic>
                      <items>
                         <MenuItem fx:id="menuMaintenance" onAction="#navigateToView" text="Maintenance" userData="MaintenanceView.fxml" />
@@ -88,8 +89,21 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <Region prefHeight="60.0" prefWidth="52.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefHeight="46.0" prefWidth="106.0" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Log Out" textFill="WHITE">
+            <Region prefWidth="20.0" HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" spacing="5.0">
+               <TextField fx:id="txtSearch" prefWidth="150.0" promptText="Search..." style="-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-prompt-text-fill: #888888; -fx-background-radius: 4;">
+                  <font>
+                     <Font name="Segoe UI" size="12.0" />
+                  </font>
+               </TextField>
+               <Button fx:id="btnSearch" onAction="#btnsearchOnAction" style="-fx-background-color: #2ecc71; -fx-text-fill: WHITE; -fx-background-radius: 4;" text="Search">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Button>
+            </HBox>
+            <Region prefWidth="10.0" />
+            <Button fx:id="btnLogout" onAction="#btnLogoutOnAction" style="-fx-background-color: #e74c3c; -fx-background-radius: 4;" text="Log Out" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

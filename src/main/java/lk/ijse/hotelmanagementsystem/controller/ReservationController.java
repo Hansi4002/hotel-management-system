@@ -169,20 +169,9 @@ public class ReservationController implements Initializable {
         }
     }
 
-    public void btnLogoutOnAction(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to logout?", ButtonType.YES, ButtonType.NO);
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            Stage stage = (Stage) btnLogout.getScene().getWindow();
-            stage.close();
-        }
-    }
-
     private void resetPage() {
         try {
             String nextId = reservationModel.getNextReservationId();
-            System.out.println("Reset Reservation ID: " + nextId); // Debugging
             if (nextId == null || !nextId.matches(reservationIDValidation)) {
                 throw new SQLException("Invalid reservation ID generated: " + nextId);
             }
