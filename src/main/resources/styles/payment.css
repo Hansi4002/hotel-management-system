@@ -1,0 +1,29 @@
+/* payment.css */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+    -fx-padding: 5;
+    -fx-font-size: 13;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 5;
+    -fx-font-size: 13;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 0 0 2 0;
+}
+
+.button {
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+}
