@@ -12,6 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.FoodOrderDetailDTO;
 import lk.ijse.hotelmanagementsystem.dto.tm.FoodOrderDetailsTM;
+import lk.ijse.hotelmanagementsystem.dto.tm.FoodOrderTM;
 import lk.ijse.hotelmanagementsystem.model.FoodOrderDetailsModel;
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class FoodOrderDetailsTableController implements Initializable {
     public TableColumn<FoodOrderDetailsTM, Integer> colQuantity;
 
     private final FoodOrderDetailsModel foodOrderDetailsModel = new FoodOrderDetailsModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     public void btnCancelOnAction(ActionEvent actionEvent) {
         FoodOrderDetailsTM selectedDetail = tblFoodOrderDetail.getSelectionModel().getSelectedItem();
@@ -142,6 +145,34 @@ public class FoodOrderDetailsTableController implements Initializable {
             loadFoodOrderDetailsData();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) throws SQLException {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            loadFoodOrderDetailsData();
+            return;
+        }
+
+        ObservableList<FoodOrderDetailsTM> filteredList = FXCollections.observableArrayList();
+
+        for (FoodOrderDetailsTM detail : tblFoodOrderDetail.getItems()) {
+            if (
+                    detail.getMenuId().toLowerCase().contains(keyword) ||
+                            detail.getOrderId().toLowerCase().contains(keyword) ||
+                            String.valueOf(detail.getItemPrice()).contains(keyword) ||
+                            String.valueOf(detail.getQuantity()).contains(keyword)
+            ) {
+                filteredList.add(detail);
+            }
+        }
+
+        tblFoodOrderDetail.setItems(filteredList);
+
+        if (filteredList.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION, "🔍 No matching food order details found.").show();
         }
     }
 }

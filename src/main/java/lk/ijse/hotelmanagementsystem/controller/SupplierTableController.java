@@ -32,6 +32,8 @@ public class SupplierTableController implements Initializable {
     public TableColumn<SupplierTM,String> colAddress;
 
     private final SupplierModel supplierModel = new SupplierModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     public void btnCancelOnAction(ActionEvent actionEvent) {
         SupplierTM selectedSupplier = tblSupplier.getSelectionModel().getSelectedItem();
@@ -140,5 +142,24 @@ public class SupplierTableController implements Initializable {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to load food data").show();
         }
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String searchText = txtSearch.getText().trim().toLowerCase();
+
+        if (searchText.isEmpty()) {
+            loadSupplierData();
+            return;
+        }
+
+        ObservableList<SupplierTM> filteredList = tblSupplier.getItems().filtered(supplier ->
+                supplier.getSupplierId().toLowerCase().contains(searchText) ||
+                        supplier.getName().toLowerCase().contains(searchText) ||
+                        supplier.getContact().toLowerCase().contains(searchText) ||
+                        supplier.getEmail().toLowerCase().contains(searchText) ||
+                        supplier.getAddress().toLowerCase().contains(searchText)
+        );
+
+        tblSupplier.setItems(filteredList);
     }
 }

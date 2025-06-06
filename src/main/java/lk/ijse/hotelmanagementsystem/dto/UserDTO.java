@@ -5,9 +5,8 @@ public class UserDTO {
     private String email;
     private String password;
     private String role;
-
-    public UserDTO() {
-    }
+    private String name;
+    private String profilePicPath;
 
     public UserDTO(String userId, String email, String password, String role) {
         this.userId = userId;
@@ -16,6 +15,13 @@ public class UserDTO {
         this.role = role;
     }
 
+    // Overloaded constructor if needed
+    public UserDTO(String userId, String email, String password, String role, String name) {
+        this(userId, email, password, role);
+        this.name = name;
+    }
+
+    // Getters
     public String getUserId() {
         return userId;
     }
@@ -32,6 +38,15 @@ public class UserDTO {
         return role;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getProfilePicPath() {
+        return profilePicPath;
+    }
+
+    // Setters
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -48,6 +63,14 @@ public class UserDTO {
         this.role = role;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProfilePicPath(String profilePicPath) {
+        this.profilePicPath = profilePicPath;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -55,6 +78,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", name='" + name + '\'' +
+                ", profilePicPath='" + profilePicPath + '\'' +
                 '}';
     }
 }

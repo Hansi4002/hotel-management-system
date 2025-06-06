@@ -121,7 +121,7 @@ public class ReservationModel {
         return roomIds;
     }
 
-    public static List<String> getAllReservationIds() throws SQLException {
+    public ReservationDTO searchReservationById(String searchText) throws SQLException {
         List<String> ids = new ArrayList<>();
         String sql = "SELECT reservation_id FROM reservation";
         try (Connection con = DBConnection.getInstance().getConnection();
@@ -131,6 +131,6 @@ public class ReservationModel {
                 ids.add(rs.getString("reservation_id"));
             }
         }
-        return ids;
+        return (ReservationDTO) ids;
     }
 }

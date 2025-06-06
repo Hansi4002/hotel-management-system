@@ -98,4 +98,29 @@ public class RoomModel {
             return stm.executeUpdate() > 0;
         }
     }
+
+    public RoomDTO searchRoombyId(String roomId) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM room WHERE room_id = ?";
+        try (Connection con = DBConnection.getInstance().getConnection();
+             PreparedStatement stm = con.prepareStatement(sql)) {
+
+            stm.setString(1, roomId);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return new RoomDTO(
+                            rs.getString("room_id"),
+                            rs.getString("room_type"),
+                            rs.getDouble("price"),
+                            rs.getString("status"),
+                            rs.getString("floor_number"),
+                            rs.getInt("capacity"),
+                            rs.getString("description"),
+                            rs.getString("room_number")
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
 }

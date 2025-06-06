@@ -14,10 +14,10 @@ import java.util.ResourceBundle;
 
 public class MaintenanceController implements Initializable {
     public TextField txtDescription;
-    public ComboBox cmStaffId;
-    public ComboBox cmRoomId;
+    public ComboBox<String> cmStaffId;
+    public ComboBox<String> cmRoomId;
     public TextField txtMaintenanceId;
-    public ComboBox cmStatus;
+    public ComboBox<String> cmStatus;
     public Button btnCancel;
     public Button btnSave;
 
@@ -46,15 +46,16 @@ public class MaintenanceController implements Initializable {
         cmStaffId.getSelectionModel().clearSelection();
         cmRoomId.getSelectionModel().clearSelection();
         cmStatus.getSelectionModel().clearSelection();
+        txtMaintenanceId.setDisable(false);
         isEditMode = false;
     }
 
-    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
-        String maintenanceId = txtMaintenanceId.getText();
-        String description = txtDescription.getText();
-        String staffId = cmStaffId.getSelectionModel().getSelectedItem().toString();
-        String roomId = cmRoomId.getSelectionModel().getSelectedItem().toString();
-        String status = cmStatus.getSelectionModel().getSelectedItem().toString();
+    public void btnSaveOnAction(ActionEvent actionEvent) {
+        String maintenanceId = txtMaintenanceId.getText().trim();
+        String description = txtDescription.getText().trim();
+        String staffId = cmStaffId.getValue();
+        String roomId = cmRoomId.getValue();
+        String status = cmStatus.getValue();
 
         if (maintenanceId.isEmpty() || description.isEmpty() || staffId == null || roomId == null || status == null) {
             new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
@@ -63,21 +64,29 @@ public class MaintenanceController implements Initializable {
 
         MaintenanceDTO dto = new MaintenanceDTO(maintenanceId, description, staffId, roomId, status);
         boolean success;
-        if (isEditMode) {
-            success = MaintenanceModel.updateMaintenance(dto);
-        } else {
-            success = MaintenanceModel.saveMaintenance(dto);
-        }
-        if (success) {
-            new Alert(Alert.AlertType.INFORMATION, isEditMode ?
-                    "✅ Maintenance record updated successfully" : "✅ Maintenance record saved successfully").show();
-            resetPage();
-            if (maintenanceTableController != null) {
-                maintenanceTableController.loadMaintenanceData();
+
+        try {
+            if (isEditMode) {
+                success = MaintenanceModel.updateMaintenance(dto);
+            } else {
+                success = MaintenanceModel.saveMaintenance(dto);
             }
-        } else {
-            new Alert(Alert.AlertType.ERROR, isEditMode ?
-                    "❌ Failed to update maintenance record" : "❌ Failed to save maintenance record").show();
+
+            if (success) {
+                new Alert(Alert.AlertType.INFORMATION, isEditMode ?
+                        "✅ Maintenance record updated successfully" : "✅ Maintenance record saved successfully").show();
+                resetPage();
+                if (maintenanceTableController != null) {
+                    maintenanceTableController.loadMaintenanceData();
+                }
+            } else {
+                new Alert(Alert.AlertType.ERROR, isEditMode ?
+                        "❌ Failed to update maintenance record" : "❌ Failed to save maintenance record").show();
+            }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "❌ Database error: " + e.getMessage()).show();
+            e.printStackTrace();
         }
     }
 
@@ -93,12 +102,12 @@ public class MaintenanceController implements Initializable {
 
         isEditMode = true;
         txtMaintenanceId.setText(dto.getMaintenanceId());
+        txtMaintenanceId.setDisable(true);
         txtDescription.setText(dto.getDescription());
         cmStaffId.getSelectionModel().select(dto.getStaffId());
         cmRoomId.getSelectionModel().select(dto.getRoomId());
         cmStatus.getSelectionModel().select(dto.getStatus());
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -24,21 +24,23 @@ import java.util.ResourceBundle;
 
 public class ReservationTableController implements Initializable {
     public Button btnLogout;
-    public TableColumn<ReservationTM,String> colReservationId;
-    public TableColumn<ReservationTM,String> colGuestId;
-    public TableColumn<ReservationTM,String> colRoomId;
+    public TableColumn<ReservationTM, String> colReservationId;
+    public TableColumn<ReservationTM, String> colGuestId;
+    public TableColumn<ReservationTM, String> colRoomId;
     public TableColumn<ReservationTM, Date> colCheckInDate;
-    public TableColumn<ReservationTM,Date> colCheckOutDate;
+    public TableColumn<ReservationTM, Date> colCheckOutDate;
     public TableColumn<ReservationTM, Timestamp> colBookingTime;
-    public TableColumn<ReservationTM,String> colNumberOfGuests;
-    public TableColumn<ReservationTM,Integer> colStatus;
-    public TableColumn<ReservationTM,Double> colTotalCost;
+    public TableColumn<ReservationTM, String> colNumberOfGuests;
+    public TableColumn<ReservationTM, Integer> colStatus;
+    public TableColumn<ReservationTM, Double> colTotalCost;
     public TableView<ReservationTM> tblReservation;
     public Button btnEdit;
-
-    private final ReservationModel reservationModel = new ReservationModel();
     public Button btnCancel;
     public Button btnAddReservation;
+    public TextField txtSearch;
+    public Button btnSearch;
+
+    private final ReservationModel reservationModel = new ReservationModel();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -87,7 +89,7 @@ public class ReservationTableController implements Initializable {
             controller.setReservationData(new ReservationDTO(
                     selected.getReservationId(),
                     selected.getRoomId(),
-                    selected.getGuestID(),
+                    selected.getGuestId(),
                     selected.getCheckInDate(),
                     selected.getCheckOutDate(),
                     selected.getBookingTime(),
@@ -101,9 +103,8 @@ public class ReservationTableController implements Initializable {
             stage.setTitle("Edit Reservation");
             stage.show();
 
-            stage.setOnHiding(event -> {
-                loadReservationData();
-            });
+            stage.setOnHiding(event -> loadReservationData());
+
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Failed to open edit reservation window").show();
@@ -116,7 +117,7 @@ public class ReservationTableController implements Initializable {
             List<ReservationTM> tmList = reservationList.stream().map(dto -> new ReservationTM(
                     dto.getReservationId(),
                     dto.getRoomId(),
-                    dto.getGuestID(),
+                    dto.getGuestId(),
                     dto.getCheckInDate(),
                     dto.getCheckOutDate(),
                     dto.getBookingTime(),
@@ -134,20 +135,23 @@ public class ReservationTableController implements Initializable {
     }
 
     public void btnCancelOnAction(ActionEvent actionEvent) {
-        ReservationTM selected = tblReservation.getSelectionModel().getSelectedItem();
-        if (selected == null) {
+        ReservationTM selectedReservation = tblReservation.getSelectionModel().getSelectedItem();
+
+        if (selectedReservation == null) {
             new Alert(Alert.AlertType.WARNING, "Please select a reservation to cancel").show();
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to cancel this reservation?", ButtonType.YES, ButtonType.NO);
-        confirm.showAndWait().ifPresent(response -> {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to cancel reservation " + selectedReservation.getReservationId() + "?",
+                ButtonType.YES, ButtonType.NO);
+        confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 try {
-                    boolean deleted = reservationModel.deleteReservation(selected.getReservationId());
-                    if (deleted) {
-                        tblReservation.getItems().remove(selected);
-                        new Alert(Alert.AlertType.INFORMATION, "Reservation canceled").show();
+                    boolean isDeleted = reservationModel.deleteReservation(selectedReservation.getReservationId());
+                    if (isDeleted) {
+                        tblReservation.getItems().remove(selectedReservation);
+                        new Alert(Alert.AlertType.INFORMATION, "Reservation canceled successfully").show();
                     } else {
                         new Alert(Alert.AlertType.ERROR, "Failed to cancel reservation").show();
                     }
@@ -157,5 +161,38 @@ public class ReservationTableController implements Initializable {
                 }
             }
         });
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String searchText = txtSearch.getText().trim();
+
+        if (searchText.isEmpty()) {
+            loadReservationData();
+            return;
+        }
+
+        try {
+            ReservationDTO dto = reservationModel.searchReservationById(searchText);
+            if (dto != null) {
+                ReservationTM tm = new ReservationTM(
+                        dto.getReservationId(),
+                        dto.getRoomId(),
+                        dto.getGuestId(),
+                        dto.getCheckInDate(),
+                        dto.getCheckOutDate(),
+                        dto.getBookingTime(),
+                        dto.getNumberOfGuests(),
+                        dto.getStatus(),
+                        dto.getTotalCost()
+                );
+                tblReservation.setItems(FXCollections.observableArrayList(tm));
+            } else {
+                tblReservation.setItems(FXCollections.observableArrayList());
+                new Alert(Alert.AlertType.INFORMATION, "No reservation found with ID: " + searchText).show();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to search reservation: " + e.getMessage()).show();
+        }
     }
 }

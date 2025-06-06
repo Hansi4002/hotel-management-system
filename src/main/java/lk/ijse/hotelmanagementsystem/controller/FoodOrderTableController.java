@@ -33,6 +33,8 @@ public class FoodOrderTableController implements Initializable {
     public Button btnAddFoodOrder;
 
     private final FoodOrderModel foodOrderModel = new FoodOrderModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -141,5 +143,27 @@ public class FoodOrderTableController implements Initializable {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to open Add Food window").show();
         }
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            loadFoodOrderData();
+            return;
+        }
+
+        ObservableList<FoodOrderTM> filteredList = FXCollections.observableArrayList();
+
+        for (FoodOrderTM order : tblFoodOrder.getItems()) {
+            if (order.getOrderId().toLowerCase().contains(keyword) ||
+                    order.getReservationID().toLowerCase().contains(keyword) ||
+                    order.getOrderType().toLowerCase().contains(keyword) ||
+                    order.getStatus().toLowerCase().contains(keyword)) {
+                filteredList.add(order);
+            }
+        }
+
+        tblFoodOrder.setItems(filteredList);
     }
 }

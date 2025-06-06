@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GuestTableController implements Initializable {
-    public Button btnLogout;
     public Button btnCancel;
     public Button btnEdit;
     public Button btnAddGuest;
@@ -37,6 +36,8 @@ public class GuestTableController implements Initializable {
     public TableColumn<GuestTM, String> colLoyaltyStatus;
 
     private final GuestModel guestModel = new GuestModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -153,5 +154,41 @@ public class GuestTableController implements Initializable {
                 }
             }
         });
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            loadGuestData();
+            return;
+        }
+
+        try {
+            List<GuestDTO> guestList = guestModel.getAllGuests();
+            List<GuestTM> filteredList = guestList.stream()
+                    .filter(dto -> dto.getGuestId().toLowerCase().contains(keyword)
+                            || dto.getName().toLowerCase().contains(keyword)
+                            || dto.getAddress().toLowerCase().contains(keyword)
+                            || dto.getContact().toLowerCase().contains(keyword)
+                            || dto.getEmail().toLowerCase().contains(keyword)
+                            || dto.getLoyaltyStatus().toLowerCase().contains(keyword))
+                    .map(dto -> new GuestTM(
+                            dto.getGuestId(),
+                            dto.getName(),
+                            dto.getDob(),
+                            dto.getAddress(),
+                            dto.getContact(),
+                            dto.getEmail(),
+                            dto.getRegistrationDate(),
+                            dto.getLoyaltyStatus()
+                    )).toList();
+
+            ObservableList<GuestTM> observableList = FXCollections.observableArrayList(filteredList);
+            tblGuests.setItems(observableList);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error during search").show();
+        }
     }
 }

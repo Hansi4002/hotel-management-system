@@ -106,4 +106,27 @@ public class StaffModel {
                 return stmt.executeUpdate() >0;
             }
     }
+
+    public StaffDTO searchStaffById(String staffId) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM staff WHERE staff_id = ?";
+        try (Connection con = DBConnection.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, staffId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new StaffDTO(
+                            rs.getString("staff_id"),
+                            rs.getString("user_id"),
+                            rs.getString("name"),
+                            rs.getString("position"),
+                            rs.getString("contact"),
+                            rs.getDate("hire_date")
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
 }

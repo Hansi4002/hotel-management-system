@@ -27,6 +27,40 @@ public class LogInPageModel {
             return new UserDTO(userId, email, password, role);
         }
 
-        return null; 
+        return null;
+    }
+
+    public UserDTO getUserByUsername(String username) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            String sql = "SELECT * FROM User WHERE email = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String userId = resultSet.getString("user_id");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String role = resultSet.getString("role");
+
+                return new UserDTO(userId, username, email, password, role);
+            }
+            return null;
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 }

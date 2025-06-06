@@ -7,6 +7,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -19,6 +21,11 @@
             <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
          </padding>
          <children>
+            <ImageView fitHeight="53.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../Downloads/4-removebg-preview.png" />
+               </image>
+            </ImageView>
             <Label text="PulseHorizon Hotel" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="24.0" />
@@ -84,7 +91,7 @@
                         <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Maintenance" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuMaintenance" onAction="#navigateToView" text="Maintenance" userData="MaintenanceView.fxml" />
+                        <MenuItem fx:id="menuMaintenance" onAction="#navigateToView" text="Maintenance" userData="lk.ijse.hotelmanagementsystem.controller.MaintenanceTableView.fxml" />
                      </items>
                   </Menu>
                </menus>

@@ -7,52 +7,63 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.LogInPageController">
+<AnchorPane prefHeight="600" prefWidth="1000" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.hotelmanagementsystem.controller.LogInPageController">
 
-   <children>
-      <VBox alignment="CENTER" prefWidth="300.0" style="-fx-background-color: #096B68;">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <children>
-            <Label text="PulseHorizon Hotel" textFill="WHITE" wrapText="true">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-         </children>
+   <VBox alignment="CENTER" prefWidth="500" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+      <padding>
+         <Insets bottom="50" left="50" right="50" top="50" />
+      </padding>
+      <Label style="-fx-font-weight: bold;" text="Pulse Horizon Hotel" textFill="#2c3e50">
+         <font>
+            <Font size="24" />
+         </font>
+      </Label>
+
+      <Label style="-fx-padding: 0 0 30 0;" text="Management System" textFill="#7f8c8d" />
+
+      <VBox alignment="TOP_LEFT" prefWidth="350" spacing="15">
+         <Label style="-fx-font-weight: bold;" text="Login to your account" textFill="#2c3e50" />
+
+         <VBox spacing="5">
+            <Label text="Username" textFill="#34495e" />
+            <TextField fx:id="txtUsername" style="-fx-background-radius: 5; -fx-pref-height: 40;" />
+         </VBox>
+
+         <VBox spacing="5">
+            <Label text="Password" textFill="#34495e" />
+            <PasswordField fx:id="txtPassword" style="-fx-background-radius: 5; -fx-pref-height: 40;" />
+         </VBox>
+
+         <HBox alignment="CENTER_RIGHT">
+            <Button fx:id="btnForgotPass" onAction="#btnForgotPassOnAction" style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-padding: 0;" text="Forgot Password?" />
+         </HBox>
+
+         <Button fx:id="btnLogin" onAction="#loginOnAction" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-pref-height: 40; -fx-pref-width: 350;" text="LOGIN" />
+
+         <Label fx:id="lblError" style="-fx-padding: 10 0 0 0;" textFill="#e74c3c" visible="false" />
       </VBox>
 
-      <VBox alignment="CENTER" prefWidth="300.0" spacing="15.0">
-         <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding>
-         <children>
-            <Label text="Sign In" textFill="#096b68">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <TextField fx:id="txtUserName" prefWidth="200.0" promptText="User Name">
-               <font>
-                  <Font name="System" size="14.0" />
-               </font>
-            </TextField>
-            <PasswordField fx:id="txtPassword" prefWidth="200.0" promptText="Password">
-               <font>
-                  <Font name="System" size="14.0" />
-               </font>
-            </PasswordField>
-            <Button fx:id="btnSignIn" onAction="#logInAction" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #096B68; -fx-background-radius: 5;" text="Sign In" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Button>
-         </children>
+      <VBox alignment="CENTER" style="-fx-padding: 30 0 0 0;">
+         <Label text="Don't have an account?" textFill="#7f8c8d" />
+         <Button style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-padding: 5 0 0 0;" text="Contact Administrator" />
       </VBox>
-   </children>
-</HBox>
+   </VBox>
+
+   <Pane prefWidth="500.0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+      <ImageView fitHeight="600" fitWidth="500" preserveRatio="false">
+         <image>
+            <Image url="@../../../../../../Desktop/5.jpg" />
+         </image>
+      </ImageView>
+      <VBox alignment="BOTTOM_LEFT" style="-fx-padding: 0 0 40 40;">
+         <Label style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text="Experience Luxury" />
+         <Label style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16;" text="Your perfect getaway awaits" />
+      </VBox>
+   </Pane>
+</AnchorPane>

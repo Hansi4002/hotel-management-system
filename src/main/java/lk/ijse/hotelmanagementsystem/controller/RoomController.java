@@ -35,6 +35,8 @@ public class RoomController implements Initializable {
     public Button btnEdit;
 
     private final RoomModel roomModel = new RoomModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -147,6 +149,38 @@ public class RoomController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Failed to open Edit Room window").show();
+        }
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String searchText = txtSearch.getText().trim();
+
+        if (searchText.isEmpty()) {
+            loadRoomData();
+            return;
+        }
+
+        try {
+            RoomDTO dto = roomModel.searchRoombyId(searchText);
+            if (dto != null) {
+                RoomTM tm = new RoomTM(
+                        dto.getRoomId(),
+                        dto.getRoomType(),
+                        dto.getPrice(),
+                        dto.getStatus(),
+                        dto.getFloorNumber(),
+                        dto.getCapacity(),
+                        dto.getDescription(),
+                        dto.getRoomNumber()
+                );
+                tblRoom.setItems(FXCollections.observableArrayList(tm));
+            } else {
+                tblRoom.setItems(FXCollections.observableArrayList());
+                new Alert(Alert.AlertType.INFORMATION, "No room found with ID: " + searchText).show();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to search room: " + e.getMessage()).show();
         }
     }
 }

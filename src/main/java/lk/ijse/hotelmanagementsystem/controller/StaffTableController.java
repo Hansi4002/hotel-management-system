@@ -34,6 +34,9 @@ public class StaffTableController implements Initializable {
     public TableColumn<StaffTM,String> colHireDate;
 
     private final StaffModel staffModel = new StaffModel();
+    public TextField txtSearch;
+    public Button btnSearch;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colStaffId.setCellValueFactory(new PropertyValueFactory<>("staffId"));
@@ -153,4 +156,40 @@ public class StaffTableController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String searchText = txtSearch.getText().trim();
+
+        if (searchText.isEmpty()) {
+            try {
+                loadStaffData();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to load staff data").show();
+            }
+            return;
+        }
+
+        try {
+            StaffDTO dto = staffModel.searchStaffById(searchText);
+            if (dto != null) {
+                StaffTM tm = new StaffTM(
+                        dto.getStaffId(),
+                        dto.getUserId(),
+                        dto.getName(),
+                        dto.getPosition(),
+                        dto.getContact(),
+                        dto.getHireDate()
+                );
+                tblStaff.setItems(FXCollections.observableArrayList(tm));
+            } else {
+                tblStaff.setItems(FXCollections.observableArrayList());
+                new Alert(Alert.AlertType.INFORMATION, "No staff found with ID: " + searchText).show();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to search staff: " + e.getMessage()).show();
+        }
+    }
+
 }

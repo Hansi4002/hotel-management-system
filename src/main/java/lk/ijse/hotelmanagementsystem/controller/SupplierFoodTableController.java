@@ -32,6 +32,8 @@ public class SupplierFoodTableController implements Initializable {
     public TableColumn<SupplierFoodTM,String> colSupplyDate;
 
     private final SupplierFoodModel supplierFoodModel = new SupplierFoodModel();
+    public TextField txtSearch;
+    public Button btnSearch;
 
     public void btnCancelOnAction(ActionEvent actionEvent) {
         SupplierFoodTM selectedFood = tblSupplierFood.getSelectionModel().getSelectedItem();
@@ -52,7 +54,9 @@ public class SupplierFoodTableController implements Initializable {
                     isDeleted = supplierFoodModel.deleteSupplierFood(
                             selectedFood.getMenuId(), selectedFood.getSupplierId());
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    new Alert(Alert.AlertType.ERROR, "Database error: " + e.getMessage()).show();
+                    return;
                 }
 
                 if (isDeleted) {
@@ -95,7 +99,8 @@ public class SupplierFoodTableController implements Initializable {
                 try {
                     loadSupplierFoodData();
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    new Alert(Alert.AlertType.ERROR, "Database error: " + e.getMessage()).show();
                 }
             });
         } catch (IOException e) {
@@ -114,6 +119,16 @@ public class SupplierFoodTableController implements Initializable {
             stage.setScene(new Scene(load));
             stage.setTitle("Add New Supplier Food Item");
             stage.show();
+
+            stage.setOnHiding(event -> {
+                try {
+                    loadSupplierFoodData();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    new Alert(Alert.AlertType.ERROR, "Database error: " + e.getMessage()).show();
+                }
+            });
+
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "❌ Failed to open Add Supplier Food Item window: " + e.getMessage()).show();
             e.printStackTrace();
@@ -137,8 +152,8 @@ public class SupplierFoodTableController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colMenuId.setCellValueFactory(new PropertyValueFactory<>("menuId"));
-        colSupplierId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-        colCost.setCellValueFactory(new PropertyValueFactory<>("itemPrice"));
+        colSupplierId.setCellValueFactory(new PropertyValueFactory<>("supplierId"));
+        colCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
         colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colSupplyDate.setCellValueFactory(new PropertyValueFactory<>("supplyDate"));
 
@@ -146,7 +161,34 @@ public class SupplierFoodTableController implements Initializable {
         try {
             loadSupplierFoodData();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Database error: " + e.getMessage()).show();
         }
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            try {
+                loadSupplierFoodData();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Database error: " + e.getMessage()).show();
+            }
+            return;
+        }
+
+        ObservableList<SupplierFoodTM> filteredList = FXCollections.observableArrayList();
+        for (SupplierFoodTM item : tblSupplierFood.getItems()) {
+            if (
+                    item.getMenuId().toLowerCase().contains(keyword) ||
+                            item.getSupplierId().toLowerCase().contains(keyword)
+            ) {
+                filteredList.add(item);
+            }
+        }
+
+        tblSupplierFood.setItems(filteredList);
     }
 }
