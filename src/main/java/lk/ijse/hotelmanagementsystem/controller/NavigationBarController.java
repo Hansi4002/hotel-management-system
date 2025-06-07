@@ -29,6 +29,7 @@ public class NavigationBarController {
     public Button btnLogout;
     public Button btnSearch;
     public TextField txtSearch;
+    public MenuItem menuStaff;
 
     public void navigateToView(ActionEvent actionEvent) {
         MenuItem clickedItem = (MenuItem) actionEvent.getSource();
@@ -74,6 +75,8 @@ public class NavigationBarController {
             loadView("PaymentView.fxml");
         } else if (query.contains("maintenance")) {
             loadView("MaintenanceView.fxml");
+        }else if (query.contains("staff")) {
+            loadView("StaffView.fxml");
         }
     }
 

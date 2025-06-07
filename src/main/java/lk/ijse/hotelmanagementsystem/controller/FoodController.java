@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.FoodDTO;
 import lk.ijse.hotelmanagementsystem.model.FoodModel;
-import lombok.SneakyThrows;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -96,7 +95,7 @@ public class FoodController implements Initializable {
                 return;
             }
 
-            FoodDTO foodDTO = new FoodDTO(menuId,available,category,price,itemName,description);
+            FoodDTO foodDTO = new FoodDTO(menuId, String.valueOf(Boolean.parseBoolean(available)),category,price,itemName,description);
 
             if (isEditMode) {
                 boolean isUpdated = foodModel.updateFood(foodDTO);
@@ -153,7 +152,7 @@ public class FoodController implements Initializable {
             txtItemName.setText(foodDTO.getItemName());
             txtDescription.setText(foodDTO.getDescription());
             cmCategory.setValue(foodDTO.getCategory());
-            cmAvailable.setValue(foodDTO.getAvailable());
+            cmAvailable.setValue((String) foodDTO.getAvailable());
             txtPrice.setText(String.valueOf(foodDTO.getPrice()));
 
             txtItemName.setDisable(false);

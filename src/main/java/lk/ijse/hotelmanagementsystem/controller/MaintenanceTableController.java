@@ -21,23 +21,42 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class MaintenanceTableController implements Initializable {
     public Button btnCancel;
     public Button btnEdit;
-    public Button btnAddFoodOrder;
+    public Button btnAddMaintenance;
     public TableView<MaintenanceTM> tblMaintenance;
     public TableColumn<MaintenanceTM, String> colMaintenanceId;
     public TableColumn<MaintenanceTM, String> colRoomId;
     public TableColumn<MaintenanceTM, String> colStaffId;
     public TableColumn<MaintenanceTM, String> colDescription;
     public TableColumn<MaintenanceTM, String> colStatus;
+    public TextField txtSearch;
+    public Button btnSearch;
 
-    private final MaintenanceModel maintenanceModel = new MaintenanceModel();
+    private final MaintenanceModel maintenanceModel;
+    private Stage activeStage;
+
+    public MaintenanceTableController() {
+        this.maintenanceModel = new MaintenanceModel();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (url == null) {
+            showAlert(Alert.AlertType.ERROR, "❌ MaintenanceTableView.fxml not found");
+            return;
+        }
+
+        if (tblMaintenance == null || colMaintenanceId == null || colRoomId == null ||
+                colStaffId == null || colDescription == null || colStatus == null ||
+                btnAddMaintenance == null || btnEdit == null || btnCancel == null ||
+                txtSearch == null || btnSearch == null) {
+            showAlert(Alert.AlertType.ERROR, "❌ One or more UI components are not properly bound in FXML");
+            return;
+        }
+
         colMaintenanceId.setCellValueFactory(new PropertyValueFactory<>("maintenanceId"));
         colRoomId.setCellValueFactory(new PropertyValueFactory<>("roomId"));
         colStaffId.setCellValueFactory(new PropertyValueFactory<>("staffId"));
@@ -45,6 +64,7 @@ public class MaintenanceTableController implements Initializable {
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         tblMaintenance.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tblMaintenance.setSortPolicy(param -> true);
 
         try {
             loadMaintenanceData();
@@ -55,21 +75,7 @@ public class MaintenanceTableController implements Initializable {
 
     public void loadMaintenanceData() throws SQLException {
         List<MaintenanceTM> maintenanceList = maintenanceModel.getAllMaintenance();
-        if (maintenanceList == null) {
-            maintenanceList = Collections.emptyList();
-        }
-
-        List<MaintenanceTM> maintenanceTMs = maintenanceList.stream()
-                .map(dto -> new MaintenanceTM(
-                        dto.getMaintenanceId(),
-                        dto.getRoomId(),
-                        dto.getStaffId(),
-                        dto.getDescription(),
-                        dto.getStatus()
-                ))
-                .collect(Collectors.toList());
-
-        ObservableList<MaintenanceTM> obList = FXCollections.observableArrayList(maintenanceTMs);
+        ObservableList<MaintenanceTM> obList = FXCollections.observableArrayList(maintenanceList != null ? maintenanceList : Collections.emptyList());
         tblMaintenance.setItems(obList);
     }
 
@@ -81,24 +87,35 @@ public class MaintenanceTableController implements Initializable {
             return;
         }
 
+        if (activeStage != null && activeStage.isShowing()) {
+            activeStage.toFront();
+            return;
+        }
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MaintenanceView.fxml"));
+            URL fxmlLocation = getClass().getResource("/view/MaintenanceView.fxml");
+            if (fxmlLocation == null) {
+                showAlert(Alert.AlertType.ERROR, "❌ MaintenanceView.fxml not found");
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
             Parent load = loader.load();
 
             MaintenanceController controller = loader.getController();
             controller.setMaintenanceData(new MaintenanceDTO(
                     selectedMaintenance.getMaintenanceId(),
-                    selectedMaintenance.getRoomId(),
-                    selectedMaintenance.getStaffId(),
                     selectedMaintenance.getDescription(),
+                    selectedMaintenance.getStaffId(),
+                    selectedMaintenance.getRoomId(),
                     selectedMaintenance.getStatus()
             ));
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);  // block interaction with other windows
-            stage.setScene(new Scene(load));
-            stage.setTitle("Edit Maintenance Record");
-            stage.showAndWait();
+            activeStage = new Stage();
+            activeStage.initModality(Modality.APPLICATION_MODAL);
+            activeStage.setScene(new Scene(load));
+            activeStage.setTitle("Edit Maintenance Record");
+            activeStage.setOnCloseRequest(e -> activeStage = null);
+            activeStage.showAndWait();
 
             loadMaintenanceData();
 
@@ -108,19 +125,30 @@ public class MaintenanceTableController implements Initializable {
         }
     }
 
-    public void btnAddNewFoodOrderOnAction(ActionEvent actionEvent) {
+    public void btnAddMaintenanceOnAction(ActionEvent actionEvent) {
+        if (activeStage != null && activeStage.isShowing()) {
+            activeStage.toFront();
+            return;
+        }
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MaintenanceView.fxml"));
+            URL fxmlLocation = getClass().getResource("/view/MaintenanceView.fxml");
+            if (fxmlLocation == null) {
+                showAlert(Alert.AlertType.ERROR, "❌ MaintenanceView.fxml not found");
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
             Parent load = loader.load();
 
             MaintenanceController controller = loader.getController();
-            controller.setMaintenanceController(this);  // Make sure this method exists!
+            controller.setMaintenanceController(this);
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(load));
-            stage.setTitle("Add New Maintenance Record");
-            stage.showAndWait();
+            activeStage = new Stage();
+            activeStage.initModality(Modality.APPLICATION_MODAL);
+            activeStage.setScene(new Scene(load));
+            activeStage.setTitle("Add New Maintenance Record");
+            activeStage.setOnCloseRequest(e -> activeStage = null);
+            activeStage.showAndWait();
 
             loadMaintenanceData();
 
@@ -159,6 +187,39 @@ public class MaintenanceTableController implements Initializable {
                 }
             }
         });
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        String query = txtSearch.getText().trim().toLowerCase();
+
+        try {
+            if (query.isEmpty()) {
+                loadMaintenanceData();
+                return;
+            }
+
+            ObservableList<MaintenanceTM> allItems = tblMaintenance.getItems();
+            ObservableList<MaintenanceTM> filteredItems = FXCollections.observableArrayList();
+
+            for (MaintenanceTM item : allItems) {
+                if (item.getMaintenanceId().toLowerCase().contains(query) ||
+                        item.getRoomId().toLowerCase().contains(query) ||
+                        item.getStaffId().toLowerCase().contains(query) ||
+                        item.getDescription().toLowerCase().contains(query) ||
+                        item.getStatus().toLowerCase().contains(query)) {
+                    filteredItems.add(item);
+                }
+            }
+
+            if (filteredItems.isEmpty()) {
+                showAlert(Alert.AlertType.INFORMATION, "No maintenance records match your search criteria");
+                loadMaintenanceData();
+            } else {
+                tblMaintenance.setItems(filteredItems);
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Error searching maintenance records: " + e.getMessage());
+        }
     }
 
     private void showAlert(Alert.AlertType type, String message) {

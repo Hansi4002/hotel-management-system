@@ -37,6 +37,7 @@ public class RoomController implements Initializable {
     private final RoomModel roomModel = new RoomModel();
     public TextField txtSearch;
     public Button btnSearch;
+    public Button btnCancel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

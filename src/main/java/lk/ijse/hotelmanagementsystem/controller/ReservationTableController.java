@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ReservationTableController implements Initializable {
-    public Button btnLogout;
     public TableColumn<ReservationTM, String> colReservationId;
     public TableColumn<ReservationTM, String> colGuestId;
     public TableColumn<ReservationTM, String> colRoomId;

@@ -24,7 +24,7 @@ public class FoodOrderDetailsTM {
         return orderId;
     }
 
-    public double getPrice() {
+    public double getItemPrice() {
         return price;
     }
 
@@ -32,7 +32,7 @@ public class FoodOrderDetailsTM {
         return quantity;
     }
 
-    public Object getItemPrice() {
-        return price;
+    public double getTotalPrice() {
+        return price * quantity;
     }
 }

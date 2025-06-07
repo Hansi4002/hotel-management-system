@@ -46,4 +46,8 @@ public class PaymentDTO {
     public String getStatus() {
         return status;
     }
+
+    public void setPaymentId(String nextId) {
+        this.paymentID = nextId;
+    }
 }

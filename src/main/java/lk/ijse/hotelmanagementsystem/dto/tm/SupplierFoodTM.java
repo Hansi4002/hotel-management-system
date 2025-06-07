@@ -36,4 +36,8 @@ public class SupplierFoodTM {
     public Date getSupplyDate() {
         return supplyDate;
     }
+
+    public Double getTotalCost() {
+        return cost * quantity;
+    }
 }

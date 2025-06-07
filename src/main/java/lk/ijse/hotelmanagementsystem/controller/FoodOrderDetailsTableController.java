@@ -12,7 +12,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.FoodOrderDetailDTO;
 import lk.ijse.hotelmanagementsystem.dto.tm.FoodOrderDetailsTM;
-import lk.ijse.hotelmanagementsystem.dto.tm.FoodOrderTM;
 import lk.ijse.hotelmanagementsystem.model.FoodOrderDetailsModel;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ public class FoodOrderDetailsTableController implements Initializable {
     public TableColumn<FoodOrderDetailsTM, String> colOrderId;
     public TableColumn<FoodOrderDetailsTM, Double> colItemPrice;
     public TableColumn<FoodOrderDetailsTM, Integer> colQuantity;
+    public TableColumn<FoodOrderDetailsTM, Double> colTotalPrice;
 
     private final FoodOrderDetailsModel foodOrderDetailsModel = new FoodOrderDetailsModel();
     public TextField txtSearch;
@@ -139,6 +139,7 @@ public class FoodOrderDetailsTableController implements Initializable {
         colOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         colItemPrice.setCellValueFactory(new PropertyValueFactory<>("itemPrice"));
         colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
 
         tblFoodOrderDetail.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         try {

@@ -1,12 +1,19 @@
 package lk.ijse.hotelmanagementsystem.dto.tm;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ReservationTM {
-    private String reservationID;
-    private String guestID;
-    private String roomID;
+    private String reservationId;
+    private String guestId;
+    private String roomId;
     private Date checkInDate;
     private Date checkOutDate;
     private Timestamp bookingTime;
@@ -14,55 +21,6 @@ public class ReservationTM {
     private String status;
     private double totalCost;
 
-    public ReservationTM(String reservationID, String guestID, String roomID, Date checkInDate, Date checkOutDate, Timestamp bookingTime, int numberOfGuests, String status, double totalCost) {
-        this.reservationID = reservationID;
-        this.guestID = guestID;
-        this.roomID = roomID;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
-        this.bookingTime = Timestamp.valueOf(bookingTime.toLocalDateTime());
-        this.numberOfGuests = numberOfGuests;
-        this.status = status;
-        this.totalCost = totalCost;
+    public ReservationTM(String reservationId, String guestId, String roomId, Date checkInDate, Date checkOutDate, int numberOfGuests, String status, double totalCost) {
     }
-
-    public String getGuestID() {
-        return guestID;
-    }
-
-    public String getRoomID() {
-        return roomID;
-    }
-
-    public Date getCheckInDate() {
-        return checkInDate;
-    }
-
-    public Date getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public Timestamp getBookingTime() {
-        return bookingTime;
-    }
-
-    public int getNumberOfGuests() {
-        return numberOfGuests;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public double getTotalCost() {
-        return totalCost;
-    }
-
-    public String getReservationId() {
-        return reservationID;
-    }
-
-    public String getGuestId() {return guestID;}
-
-    public String getRoomId() {return roomID;}
 }

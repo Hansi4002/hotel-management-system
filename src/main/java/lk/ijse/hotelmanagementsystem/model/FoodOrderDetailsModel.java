@@ -17,6 +17,7 @@ public class FoodOrderDetailsModel {
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 menuIds.add(rs.getString("menu_id"));
             }
@@ -30,6 +31,7 @@ public class FoodOrderDetailsModel {
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 orderIds.add(rs.getString("order_id"));
             }
@@ -38,13 +40,15 @@ public class FoodOrderDetailsModel {
     }
 
     public static boolean updateFoodOrderDetail(FoodOrderDetailDTO dto) throws SQLException {
-        String sql = "UPDATE Food_Order_Detail SET menu_id = ?,order_id = ?,item_price = ?, quantity = ?";
+        String sql = "UPDATE Food_Order_Detail SET item_price = ?, quantity = ? WHERE menu_id = ? AND order_id = ?";
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setString(1, dto.getMenuId());
-            stmt.setString(2, dto.getOrderId());
-            stmt.setDouble(3, (Double) dto.getItemPrice());
-            stmt.setInt(4, dto.getQuantity());
+
+            stmt.setDouble(1, (Double) dto.getItemPrice());
+            stmt.setInt(2, dto.getQuantity());
+            stmt.setString(3, dto.getMenuId());
+            stmt.setString(4, dto.getOrderId());
+
             return stmt.executeUpdate() > 0;
         }
     }
@@ -67,6 +71,7 @@ public class FoodOrderDetailsModel {
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 details.add(new FoodOrderDetailDTO(
                         rs.getString("menu_id"),
@@ -83,6 +88,7 @@ public class FoodOrderDetailsModel {
         String sql = "DELETE FROM Food_Order_Detail WHERE menu_id = ? AND order_id = ?";
         try (Connection con = DBConnection.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, menuId);
             stmt.setString(2, orderId);
             return stmt.executeUpdate() > 0;

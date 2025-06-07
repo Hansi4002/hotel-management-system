@@ -12,4 +12,5 @@ module lk.ijse.hotelmanagementsystem {
     opens lk.ijse.hotelmanagementsystem.controller to javafx.fxml;
     opens lk.ijse.hotelmanagementsystem.dto.tm to javafx.base;
     exports lk.ijse.hotelmanagementsystem;
+    exports lk.ijse.hotelmanagementsystem.controller;
 }

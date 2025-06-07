@@ -15,7 +15,7 @@ public class Appinitializer extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Food Management");
+        stage.setTitle("Login Page");
         stage.show();
     }
 

@@ -1,5 +1,6 @@
 package lk.ijse.hotelmanagementsystem.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +31,7 @@ public class SupplierFoodTableController implements Initializable {
     public TableColumn<SupplierFoodTM,Double> colCost;
     public TableColumn<SupplierFoodTM,Integer> colQuantity;
     public TableColumn<SupplierFoodTM,String> colSupplyDate;
+    public TableColumn<SupplierFoodTM,Double> colTotalCost;
 
     private final SupplierFoodModel supplierFoodModel = new SupplierFoodModel();
     public TextField txtSearch;
@@ -156,6 +158,7 @@ public class SupplierFoodTableController implements Initializable {
         colCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
         colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colSupplyDate.setCellValueFactory(new PropertyValueFactory<>("supplyDate"));
+        colTotalCost.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getTotalCost()));
 
         tblSupplierFood.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         try {

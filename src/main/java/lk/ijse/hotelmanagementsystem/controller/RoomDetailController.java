@@ -46,19 +46,6 @@ public class RoomDetailController implements Initializable {
         }
     }
 
-//    public void btnLogoutOnAction(ActionEvent actionEvent) {
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to logout?", ButtonType.YES, ButtonType.NO);
-//        Optional<ButtonType> result = alert.showAndWait();
-//
-//        if (result.isPresent() && result.get() == ButtonType.YES) {
-//            try {
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                new Alert(Alert.AlertType.ERROR, "❌ Failed to logout").show();
-//            }
-//        }
-//    }
-
     private void resetPage() {
         try {
             loadNextId();
@@ -174,78 +161,6 @@ public class RoomDetailController implements Initializable {
             resetPage();
         }
     }
-//
-//    public void btnEditOnAction(ActionEvent actionEvent) {
-//        if (!isEditMode) {
-//            new Alert(Alert.AlertType.WARNING, "⚠ Edit mode not active. Please select a room to edit.").show();
-//            return;
-//        }
-//
-//        try {
-//            String roomId = lblRoomId.getText();
-//            String roomType = cmRoomType.getSelectionModel().getSelectedItem().toString();
-//            String priceText = txtPrice.getText();
-//            String status = cmStatus.getSelectionModel().getSelectedItem().toString();
-//            String floorNumber = cmFloorNumber.getSelectionModel().getSelectedItem().toString();
-//            String capacityText = cmCapacity.getSelectionModel().getSelectedItem().toString();
-//            String description = txtDescription.getText();
-//            String roomNumber = txtRoomNumber.getText();
-//
-//            if (roomId.isEmpty() || roomType == null || priceText.isEmpty() || status == null ||
-//                    floorNumber == null || capacityText == null || roomNumber.isEmpty()) {
-//                new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
-//                return;
-//            }
-//
-//            double price;
-//            int capacity;
-//
-//            try {
-//                price = Double.parseDouble(priceText);
-//            } catch (NumberFormatException e) {
-//                new Alert(Alert.AlertType.ERROR, "❌ Invalid price").show();
-//                return;
-//            }
-//
-//            try {
-//                capacity = Integer.parseInt(capacityText);
-//            } catch (NumberFormatException e) {
-//                new Alert(Alert.AlertType.ERROR, "❌ Invalid capacity").show();
-//                return;
-//            }
-//
-//            if (!roomId.matches(roomIDValidation)) {
-//                new Alert(Alert.AlertType.ERROR, "❌ Invalid Room ID format (e.g., R001)").show();
-//                return;
-//            }
-//
-//            RoomDTO roomDTO = new RoomDTO(
-//                    roomId,
-//                    roomType,
-//                    price,
-//                    status,
-//                    floorNumber,
-//                    capacity,
-//                    description,
-//                    roomNumber
-//            );
-//
-//            boolean isUpdated = roomModel.updateRoom(roomDTO);
-//            if (isUpdated) {
-//                new Alert(Alert.AlertType.INFORMATION, "✅ Room updated successfully").show();
-//                if (roomController != null) {
-//                    roomController.loadRoomData();
-//                }
-//                Stage stage = (Stage) btnEdit.getScene().getWindow();
-//                stage.close();
-//            } else {
-//                new Alert(Alert.AlertType.ERROR, "❌ Failed to update room").show();
-//            }
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//            new Alert(Alert.AlertType.ERROR, "❌ Error updating room: " + e.getMessage()).show();
-//        }
-//    }
 
     public void setRoomData(RoomDTO roomDTO) {
         isEditMode = true;

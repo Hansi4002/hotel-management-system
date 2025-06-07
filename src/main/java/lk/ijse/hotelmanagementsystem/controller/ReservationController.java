@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -47,6 +49,8 @@ public class ReservationController implements Initializable {
             lblReservationId.setText(nextId);
             cmGuestId.setItems(FXCollections.observableArrayList(reservationModel.loadGuestIds()));
             cmRoomId.setItems(FXCollections.observableArrayList(reservationModel.loadRoomIds()));
+            txtBookingTime.setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+            dpCheckInDate.setValue(java.time.LocalDate.now());
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "❌ Failed to initialize reservation data: " + e.getMessage()).show();
@@ -68,7 +72,7 @@ public class ReservationController implements Initializable {
 
             if (reservationId.isEmpty() || guestId == null || roomId == null || checkInLocal == null ||
                     checkOutLocal == null || bookingTimeStr.isEmpty() || numberOfGuestsStr.isEmpty() ||
-                    status == null || totalCostStr.isEmpty()) {
+                    status == null) {
                 new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
                 return;
             }
@@ -78,13 +82,30 @@ public class ReservationController implements Initializable {
                 return;
             }
 
+            if (checkInLocal.isBefore(java.time.LocalDate.now())) {
+                new Alert(Alert.AlertType.ERROR, "❌ Check-in date cannot be in the past").show();
+                return;
+            }
+
+            if (!checkInLocal.isBefore(checkOutLocal)) {
+                new Alert(Alert.AlertType.ERROR, "❌ Check-in date must be before check-out date").show();
+                return;
+            }
+
             if (!bookingTimeStr.matches("^\\d{2}:\\d{2}$")) {
                 new Alert(Alert.AlertType.ERROR, "❌ Invalid time format. Use HH:mm (e.g., 14:30)").show();
                 return;
             }
 
+            String[] timeParts = bookingTimeStr.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid booking time. Hours must be 00-23 and minutes 00-59").show();
+                return;
+            }
+
             int numberOfGuests;
-            double totalCost;
             try {
                 numberOfGuests = Integer.parseInt(numberOfGuestsStr);
                 if (numberOfGuests <= 0) {
@@ -96,24 +117,30 @@ public class ReservationController implements Initializable {
                 return;
             }
 
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(checkInLocal, checkOutLocal);
+            if (nights <= 0) {
+                new Alert(Alert.AlertType.ERROR, "❌ Stay duration must be at least 1 night").show();
+                return;
+            }
+
+            double roomPrice = reservationModel.getRoomPriceById(roomId);
+            if (roomPrice < 0) {
+                new Alert(Alert.AlertType.ERROR, "❌ Failed to get room price").show();
+                return;
+            }
+
+            double totalCost = roomPrice * nights * numberOfGuests;
+            txtTotalCost.setText(String.format("%.2f", totalCost));
+
             try {
-                totalCost = Double.parseDouble(totalCostStr);
-                if (totalCost < 0) {
-                    new Alert(Alert.AlertType.ERROR, "❌ Total cost cannot be negative").show();
-                    return;
-                }
+                totalCost = Double.parseDouble(txtTotalCost.getText());
             } catch (NumberFormatException e) {
-                new Alert(Alert.AlertType.ERROR, "❌ Invalid total cost").show();
+                new Alert(Alert.AlertType.ERROR, "❌ Invalid total cost after calculation").show();
                 return;
             }
 
-            if (checkInLocal.isAfter(checkOutLocal)) {
-                new Alert(Alert.AlertType.ERROR, "❌ Check-in date must be before check-out date").show();
-                return;
-            }
-
-            Date checkInDate = Date.valueOf(checkInLocal);
-            Date checkOutDate = Date.valueOf(checkOutLocal);
+            java.sql.Date checkInDate = java.sql.Date.valueOf(checkInLocal);
+            java.sql.Date checkOutDate = java.sql.Date.valueOf(checkOutLocal);
 
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String fullTimestamp = checkInLocal.toString() + " " + bookingTimeStr + ":00";

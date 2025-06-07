@@ -15,13 +15,11 @@ public class UserDTO {
         this.role = role;
     }
 
-    // Overloaded constructor if needed
     public UserDTO(String userId, String email, String password, String role, String name) {
         this(userId, email, password, role);
         this.name = name;
     }
 
-    // Getters
     public String getUserId() {
         return userId;
     }
@@ -46,7 +44,6 @@ public class UserDTO {
         return profilePicPath;
     }
 
-    // Setters
     public void setUserId(String userId) {
         this.userId = userId;
     }

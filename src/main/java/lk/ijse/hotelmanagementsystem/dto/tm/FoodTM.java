@@ -8,9 +8,9 @@ public class FoodTM {
     private String itemName;
     private String description;
 
-    public FoodTM(String menuId, String itemName, String description, String category, String available, double price) {
+    public FoodTM(String menuId, String itemName, String description, String category, String availabl, double price) {
         this.menuId = menuId;
-        this.available = available;
+        this.available = availabl;
         this.category = category;
         this.price = price;
         this.itemName = itemName;
@@ -21,9 +21,7 @@ public class FoodTM {
         return menuId;
     }
 
-    public String getAvailable() {
-        return available;
-    }
+    public String  isAvailable() {return available;}
 
     public String getCategory() {
         return category;
@@ -45,9 +43,7 @@ public class FoodTM {
         this.menuId = menuId;
     }
 
-    public void setAvailable(String available) {
-        this.available = available;
-    }
+    public void setAvailable(String available) {this.available = available;}
 
     public void setCategory(String category) {
         this.category = category;
@@ -64,4 +60,6 @@ public class FoodTM {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getAvailable() {return available;}
 }

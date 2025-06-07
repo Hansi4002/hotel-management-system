@@ -63,9 +63,7 @@ public class FoodOrderTM {
         this.totalAmount = totalAmount;
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
+    public void setOrderDate(Date orderDate) {this.orderDate = orderDate;}
 
     @Override
     public String toString() {

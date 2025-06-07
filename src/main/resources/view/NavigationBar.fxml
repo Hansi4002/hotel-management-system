@@ -42,12 +42,13 @@
                      </items>
                   </Menu>
                   <Menu>
-                     <graphic>
-                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Profile" />
-                     </graphic>
                      <items>
+                      <MenuItem fx:id="menuStaff" onAction="#navigateToView" text="Staff" userData="StaffTableView.fxml" />
                         <MenuItem fx:id="menuProfile" onAction="#navigateToView" text="Profile" userData="ProfileView.fxml" />
                      </items>
+                     <graphic>
+                        <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Profile " />
+                     </graphic>
                   </Menu>
                   <Menu>
                      <graphic>
@@ -91,7 +92,7 @@
                         <Label style="-fx-text-fill: WHITE; -fx-font-size: 14;" text="Maintenance" />
                      </graphic>
                      <items>
-                        <MenuItem fx:id="menuMaintenance" onAction="#navigateToView" text="Maintenance" userData="lk.ijse.hotelmanagementsystem.controller.MaintenanceTableView.fxml" />
+                        <MenuItem fx:id="menuMaintenance" onAction="#navigateToView" text="Maintenance" userData="MaintenanceTableView.fxml" />
                      </items>
                   </Menu>
                </menus>

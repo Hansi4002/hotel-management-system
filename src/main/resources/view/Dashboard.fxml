@@ -19,7 +19,7 @@
             <bottom>
                 <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1190.0" style="-fx-background-color: #096B68;" BorderPane.alignment="CENTER">
                     <children>
-                        <Label text="PulseHorizon Hotel" textFill="WHITE">
+                        <Label text="PulseHorizon Hotel Management System © 2024" textFill="WHITE">
                             <font>
                                 <Font name="System Italic" size="12.0" />
                             </font>
@@ -31,95 +31,168 @@
                 </HBox>
             </bottom>
             <center>
-                <VBox spacing="20.0" BorderPane.alignment="CENTER">
+                <VBox spacing="20.0" style="-fx-background-color: #f5f7fa;" BorderPane.alignment="CENTER">
                     <children>
-                        <VBox spacing="10.0" style="-fx-background-color: #ffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
+                        <VBox spacing="10.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
                             <children>
-                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <HBox alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="1120.0" spacing="10.0" style="-fx-background-color: #096B68; -fx-background-radius: 7;">
                                     <children>
-                                        <Label text="Dashboard - PulseHorizon Hotel" textFill="#2c3e50">
+                                        <Label prefHeight="35.0" prefWidth="201.0" text="Dashboard Overview" textFill="WHITE">
                                             <font>
-                                                <Font name="System Bold" size="15.0" />
+                                                <Font name="System Bold" size="16.0" />
                                             </font>
+                                            <padding>
+                                                <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                                            </padding>
                                         </Label>
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <Label fx:id="lblWelcomeMessage" text="Welcome back, [User Name]! Today is [Date and Time]." textFill="#2c3e50">
+                                        <Label fx:id="lblWelcomeMessage" text="Welcome back, [User Name]! Today is [Date and Time]." textFill="WHITE">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
+                                            <padding>
+                                                <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                                            </padding>
                                         </Label>
                                     </children>
                                 </HBox>
-                                <Separator style="-fx-background-color: #ecf0f1;" />
-                                <VBox spacing="10.0">
+                                <Separator style="-fx-background-color: #d1d9e6;" />
+                                <VBox spacing="15.0">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
                                     <children>
                                         <HBox alignment="CENTER" spacing="20.0">
-                                            <VBox prefWidth="350.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #2c3e50; -fx-border-width: 1;">
+                                            <VBox prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 8;">
                                                 <padding>
                                                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                                 </padding>
                                                 <children>
-                                                    <Label text="Total Rooms" textFill="#2c3e50">
+                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                        <children>
+                                                            <Label text="Total Rooms" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="14.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Region HBox.hgrow="ALWAYS" />
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-font-size: 18;" text="􀆭">
+                                                                <padding>
+                                                                    <Insets right="5.0" />
+                                                                </padding>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                    <Label fx:id="lblTotalRooms" style="-fx-font-weight: bold;" text="50" textFill="#096b68">
                                                         <font>
-                                                            <Font size="14.0" />
+                                                            <Font size="24.0" />
                                                         </font>
                                                     </Label>
-                                                    <Label fx:id="lblTotalRooms" text="50" textFill="#34495e">
-                                                        <font>
-                                                            <Font name="System" size="18.0" />
-                                                        </font>
-                                                    </Label>
+                                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                        <children>
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-text-fill: #38a169; -fx-font-size: 12;" text="􀅴" />
+                                                            <Label fx:id="lblAvailableRooms" text="35 Available" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Label text="|" textFill="#cbd5e0" />
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-text-fill: #e53e3e; -fx-font-size: 12;" text="􀅵" />
+                                                            <Label fx:id="lblOccupiedRooms" text="15 Occupied" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
                                                 </children>
                                             </VBox>
-                                            <VBox prefWidth="350.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #2c3e50; -fx-border-width: 1;">
+                                            <VBox prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 8;">
                                                 <padding>
                                                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                                 </padding>
                                                 <children>
-                                                    <Label text="Total Bookings" textFill="#2c3e50">
+                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                        <children>
+                                                            <Label text="Total Bookings" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="14.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Region HBox.hgrow="ALWAYS" />
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-font-size: 18;" text="􀈎">
+                                                                <padding>
+                                                                    <Insets right="5.0" />
+                                                                </padding>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                    <Label fx:id="lblTotalBookings" style="-fx-font-weight: bold;" text="30" textFill="#096b68">
                                                         <font>
-                                                            <Font size="14.0" />
+                                                            <Font size="24.0" />
                                                         </font>
                                                     </Label>
-                                                    <Label fx:id="lblTotalBookings" text="30" textFill="#34495e">
-                                                        <font>
-                                                            <Font name="System" size="18.0" />
-                                                        </font>
-                                                    </Label>
+                                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                        <children>
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-text-fill: #3182ce; -fx-font-size: 12;" text="􀋃" />
+                                                            <Label fx:id="lblActiveBookings" text="12 Active" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
                                                 </children>
                                             </VBox>
-                                            <VBox prefWidth="350.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #2c3e50; -fx-border-width: 1;">
+                                            <VBox prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 8;">
                                                 <padding>
                                                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                                 </padding>
                                                 <children>
-                                                    <Label text="Total Revenue" textFill="#2c3e50">
+                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                        <children>
+                                                            <Label text="Revenue" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="14.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <Region HBox.hgrow="ALWAYS" />
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-font-size: 18;" text="􀅼">
+                                                                <padding>
+                                                                    <Insets right="5.0" />
+                                                                </padding>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
+                                                    <Label fx:id="lblTotalRevenue" style="-fx-font-weight: bold;" text="Rs. 5,000" textFill="#096b68">
                                                         <font>
-                                                            <Font size="14.0" />
+                                                            <Font size="24.0" />
                                                         </font>
                                                     </Label>
-                                                    <Label fx:id="lblTotalRevenue" text="5,000" textFill="#34495e">
-                                                        <font>
-                                                            <Font name="System" size="18.0" />
-                                                        </font>
-                                                    </Label>
+                                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                        <children>
+                                                            <Label style="-fx-font-family: 'SF Pro'; -fx-text-fill: #dd6b20; -fx-font-size: 12;" text="􀁟" />
+                                                            <Label fx:id="lblTodayRevenue" text="Rs. 1,200 Today" textFill="#4a5568">
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                            </Label>
+                                                        </children>
+                                                    </HBox>
                                                 </children>
                                             </VBox>
                                         </HBox>
                                     </children>
                                 </VBox>
-                                <Separator style="-fx-background-color: #ecf0f1;" />
-                                <AnchorPane fx:id="contentArea" prefHeight="400.0" prefWidth="1150.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #2c3e50; -fx-border-width: 1;">
+                                <Separator style="-fx-background-color: #d1d9e6;" />
+                                <AnchorPane fx:id="contentArea" prefHeight="400.0" prefWidth="1150.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-border-color: #e0e6ed; -fx-border-width: 1;">
                                     <padding>
                                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                     </padding>
                                 </AnchorPane>
                             </children>
                             <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="0.0" />
                             </padding>
                         </VBox>
                     </children>

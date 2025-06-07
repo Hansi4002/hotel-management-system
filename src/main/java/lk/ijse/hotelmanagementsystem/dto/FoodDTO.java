@@ -25,8 +25,7 @@ public class FoodDTO {
         this.available = available;
         this.price = price;
     }
+    public Object getAvailable() {return available;}
 
-    public String getAvailable() {
-        return available;
-    }
+    public String isAvailable() {return available;}
 }

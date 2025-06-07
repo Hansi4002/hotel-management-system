@@ -1,17 +1,12 @@
 package lk.ijse.hotelmanagementsystem.dto;
 
-import lombok.*;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 
-@NoArgsConstructor
-@Getter
-@Setter
 public class ReservationDTO {
-    private String reservationID;
-    private String guestID;
-    private String roomID;
+    private String reservationId;
+    private String guestId;
+    private String roomId;
     private Date checkInDate;
     private Date checkOutDate;
     private Timestamp bookingTime;
@@ -19,10 +14,11 @@ public class ReservationDTO {
     private String status;
     private double totalCost;
 
-    public ReservationDTO(String reservationID, String guestID, String roomID, Date checkInDate, Date checkOutDate, Timestamp bookingTime, int numberOfGuests, String status, double totalCost) {
-        this.reservationID = reservationID;
-        this.guestID = guestID;
-        this.roomID = roomID;
+    public ReservationDTO(String reservationId, String guestId, String roomId, Date checkInDate, Date checkOutDate,
+                          Timestamp bookingTime, int numberOfGuests, String status, double totalCost) {
+        this.reservationId = reservationId;
+        this.guestId = guestId;
+        this.roomId = roomId;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingTime = bookingTime;
@@ -31,39 +27,22 @@ public class ReservationDTO {
         this.totalCost = totalCost;
     }
 
-    public String getReservationID() {
-        return reservationID;
-    }
-
-    public String getGuestID() {
-        return guestID;
-    }
-
-    public String getRoomID() {
-        return roomID;
-    }
-
-    public Date getCheckInDate() {return checkInDate;}
-
-    public Date getCheckOutDate() {return checkOutDate;}
-
-    public Timestamp getBookingTime() {return bookingTime;}
-
-    public int getNumberOfGuests() {
-        return numberOfGuests;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public double getTotalCost() {
-        return totalCost;
-    }
-
-    public String getRoomId() {return roomID;}
-
-    public String getGuestId() {return guestID;}
-
-    public String getReservationId() {return reservationID;}
+    public String getReservationId() { return reservationId; }
+    public void setReservationId(String reservationId) { this.reservationId = reservationId; }
+    public String getGuestId() { return guestId; }
+    public void setGuestId(String guestId) { this.guestId = guestId; }
+    public String getRoomId() { return roomId; }
+    public void setRoomId(String roomId) { this.roomId = roomId; }
+    public Date getCheckInDate() { return checkInDate; }
+    public void setCheckInDate(Date checkInDate) { this.checkInDate = checkInDate; }
+    public Date getCheckOutDate() { return checkOutDate; }
+    public void setCheckOutDate(Date checkOutDate) { this.checkOutDate = checkOutDate; }
+    public Timestamp getBookingTime() { return bookingTime; }
+    public void setBookingTime(Timestamp bookingTime) { this.bookingTime = bookingTime; }
+    public int getNumberOfGuests() { return numberOfGuests; }
+    public void setNumberOfGuests(int numberOfGuests) { this.numberOfGuests = numberOfGuests; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public double getTotalCost() { return totalCost; }
+    public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
 }

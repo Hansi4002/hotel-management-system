@@ -87,6 +87,7 @@
                               <TableColumn fx:id="colOrderId" text="Order ID" />
                               <TableColumn fx:id="colItemPrice" text="Item Price" />
                               <TableColumn fx:id="colQuantity" text="Quantity" />
+                              <TableColumn fx:id="colTotalPrice" text="Total Price" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

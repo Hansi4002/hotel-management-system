@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.StaffDTO;
 import lk.ijse.hotelmanagementsystem.model.StaffModel;
 
@@ -27,10 +28,29 @@ public class StaffController implements Initializable {
     private StaffTableController staffTableController;
     private final StaffModel staffModel = new StaffModel();
     private boolean isEditMode = false;
-
-    private static final String staffIDValidation = "^S\\d{3}$";
     private static final String nameValidation = "^[A-Za-z ]{3,50}$";
-    private static final String contactValidation = "^(07[0-9]{8})$";
+    private static final String contactValidation = "^07[0-9]{8}$";
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (url == null) {
+            new Alert(Alert.AlertType.ERROR, "❌ StaffView.fxml not found").show();
+            return;
+        }
+
+        try {
+            cmUserId.setItems(FXCollections.observableArrayList(staffModel.getAllUserIds()));
+            if (cmUserId.getItems().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "⚠ No user IDs available. Add users first.").show();
+            }
+            lblStaffId.setText(staffModel.getNextStaffId());
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "❌ Failed to initialize form: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+
+        dpHireDate.setValue(LocalDate.now().minusDays(1));
+    }
 
     public void btnCancelOnAction(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
@@ -47,69 +67,37 @@ public class StaffController implements Initializable {
             }
         }
     }
-    private void resetPage() {
-        try {
-            String nextId = staffModel.getNextStaffId();
-            if (nextId == null || !nextId.matches(staffIDValidation)) {
-                throw new SQLException("Invalid reservation ID generated: " + nextId);
-            }
-            lblStaffId.setText(nextId);
-            cmUserId.setValue(null);
-            txtName.clear();
-            txtPosition.clear();
-            txtContact.clear();
-            dpHireDate.setValue(null);
-            isEditMode = false;
-            btnSave.setText("Save");
-        }catch (Exception e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "❌ Failed to reset form: " + e.getMessage()).show();
-            lblStaffId.setText("ERROR");
-        }
-    }
 
     public void btnSaveOnAction(ActionEvent actionEvent) {
         try {
             String staffId = lblStaffId.getText();
             String userId = cmUserId.getValue();
-            String name = txtName.getText();
-            String position = txtPosition.getText();
-            String contact = txtContact.getText();
+            String name = txtName.getText().trim();
+            String position = txtPosition.getText().trim();
+            String contact = txtContact.getText().trim();
             LocalDate hireDate = dpHireDate.getValue();
 
             if (staffId.isEmpty() || userId == null || name.isEmpty() || position.isEmpty() || contact.isEmpty() || hireDate == null) {
-                new Alert(Alert.AlertType.WARNING, "⚠️ Please fill in all the fields.").show();
-                return;
-            }
-
-            if (!staffId.matches(staffIDValidation)) {
-                new Alert(Alert.AlertType.WARNING, "⚠️ Invalid Staff ID format!").show();
+                new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all fields").show();
                 return;
             }
 
             if (!name.matches(nameValidation)) {
-                new Alert(Alert.AlertType.WARNING, "⚠️ Name should only contain letters and spaces (3–50 characters).").show();
+                new Alert(Alert.AlertType.WARNING, "⚠ Name must be 3–50 letters/spaces").show();
                 return;
             }
 
             if (!contact.matches(contactValidation)) {
-                new Alert(Alert.AlertType.WARNING, "⚠️ Contact must be a valid 10-digit phone number.").show();
+                new Alert(Alert.AlertType.WARNING, "⚠ Contact must be a 10-digit number (e.g., 0712345678)").show();
                 return;
             }
 
-            if (hireDate.isAfter(LocalDate.now())) {
-                new Alert(Alert.AlertType.WARNING, "⚠️ Hire date cannot be in the future.").show();
+            if (!hireDate.isBefore(LocalDate.now())) {
+                new Alert(Alert.AlertType.WARNING, "⚠ Hire date must be before today").show();
                 return;
             }
 
-            StaffDTO staffDTO = new StaffDTO(
-                    staffId,
-                    userId,
-                    name,
-                    position,
-                    contact,
-                    Date.valueOf(hireDate)
-            );
+            StaffDTO staffDTO = new StaffDTO(staffId, userId, name, position, contact, Date.valueOf(hireDate));
 
             boolean success;
             if (isEditMode) {
@@ -119,27 +107,24 @@ public class StaffController implements Initializable {
             }
 
             if (success) {
-                new Alert(Alert.AlertType.INFORMATION, isEditMode ? "✅ Staff updated successfully!" : "✅ Staff saved successfully!").show();
-                resetPage();
+                new Alert(Alert.AlertType.INFORMATION, isEditMode ? "✅ Staff updated successfully" : "✅ Staff saved successfully").show();
                 if (staffTableController != null) {
                     staffTableController.loadStaffData();
                 }
+                Stage stage = (Stage) btnSave.getScene().getWindow();
+                stage.close();
             } else {
-                new Alert(Alert.AlertType.ERROR, "❌ Operation failed.").show();
+                new Alert(Alert.AlertType.ERROR, "❌ Failed to save/update staff").show();
             }
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "❌ Database error: " + e.getMessage()).show();
             e.printStackTrace();
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "❌ Unexpected error: " + e.getMessage()).show();
-            e.printStackTrace();
         }
     }
 
-
     public void setStaffData(StaffDTO staffDTO) {
-        if (staffDTO == null || staffDTO.getUserId() == null) {
-            new Alert(Alert.AlertType.ERROR, "❌ Invalid or missing Staff data").show();
+        if (staffDTO == null) {
+            new Alert(Alert.AlertType.ERROR, "❌ Invalid staff data").show();
             return;
         }
 
@@ -149,29 +134,24 @@ public class StaffController implements Initializable {
         txtName.setText(staffDTO.getName());
         txtPosition.setText(staffDTO.getPosition());
         txtContact.setText(staffDTO.getContact());
-
-        if (staffDTO.getHireDate() != null) {
-            dpHireDate.setValue(staffDTO.getHireDate().toLocalDate());
-        }
-
+        dpHireDate.setValue(staffDTO.getHireDate() != null ? staffDTO.getHireDate().toLocalDate() : null);
         btnSave.setText("Update");
+        lblStaffId.setDisable(true);
     }
 
-    public void setStaffTableController(StaffTableController staffTableController) {
-        this.staffTableController = staffTableController;
+    public void setStaffTableController(StaffTableController controller) {
+        this.staffTableController = controller;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            cmUserId.setItems(FXCollections.observableArrayList(staffModel.getAllUserIds()));
-
-            String nextStaffId = StaffModel.getNextStaffId();
-            lblStaffId.setText(nextStaffId);
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to load user IDs: " + e.getMessage()).show();
-        }
-
-        dpHireDate.setValue(LocalDate.now());
+    private void resetPage() throws SQLException {
+        lblStaffId.setText(staffModel.getNextStaffId());
+        cmUserId.getSelectionModel().clearSelection();
+        txtName.clear();
+        txtPosition.clear();
+        txtContact.clear();
+        dpHireDate.setValue(LocalDate.now().minusDays(1));
+        isEditMode = false;
+        btnSave.setText("Save");
+        lblStaffId.setDisable(false);
     }
 }

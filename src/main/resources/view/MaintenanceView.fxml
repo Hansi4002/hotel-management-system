@@ -91,7 +91,6 @@
                               <TextField fx:id="txtDescription" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <ComboBox fx:id="cmStaffId" prefWidth="150.0" promptText="Select a Staff" style="-fx-background-color: #ffff; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <ComboBox fx:id="cmRoomId" prefWidth="150.0" promptText="Select a Room" style="-fx-background-color: #ffff; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtMaintenanceId" style="-fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;" text="M001" GridPane.columnIndex="1" />
                               <ComboBox fx:id="cmStatus" prefWidth="150.0" promptText="Select a Status" style="-fx-background-color: #ffff; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>

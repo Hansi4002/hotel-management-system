@@ -28,14 +28,26 @@ public class GuestController implements Initializable {
     public Button btnCancel;
     public Button btnSave;
 
-    private GuestModel guestModel = new GuestModel();
+    private final GuestModel guestModel = new GuestModel();
     private GuestTableController guestTableController;
     private boolean isEditMode = false;
     private String existingGuestId = null;
-    private String guestIdValidation = "^G\\d{3}$";
-    private String emailValidation = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    private String contactValidation = "^\\d{10}$";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final String guestIdValidation = "^G\\d{3}$";
+    private final String emailValidation = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    private final String contactValidation = "^\\d{10}$";
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        cmLoyaltyStatus.setItems(FXCollections.observableArrayList("Bronze", "Silver", "Gold"));
+        dpRegistrationDate.setValue(java.time.LocalDate.now());
+
+        try {
+            lblGuestId.setText(GuestModel.getNextGuestId());
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void btnCancelOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
@@ -57,10 +69,10 @@ public class GuestController implements Initializable {
             String contact = txtContact.getText();
             String address = txtAddress.getText();
             java.time.LocalDate registrationDateLocal = dpRegistrationDate.getValue();
-            String loyaltyStatus = cmLoyaltyStatus.getSelectionModel().getSelectedItem().toString();
+            Object selectedStatus = cmLoyaltyStatus.getSelectionModel().getSelectedItem();
 
             if (guestId.isEmpty() || name.isEmpty() || dobLocal == null || email.isEmpty() ||
-                    contact.isEmpty() || address.isEmpty() || registrationDateLocal == null || loyaltyStatus == null) {
+                    contact.isEmpty() || address.isEmpty() || registrationDateLocal == null || selectedStatus == null) {
                 new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
                 return;
             }
@@ -83,8 +95,7 @@ public class GuestController implements Initializable {
             Date dob = dateFormat.parse(dobLocal.toString());
             Date registrationDate = dateFormat.parse(registrationDateLocal.toString());
 
-            Date today = new Date();
-            long ageInMillis = today.getTime() - dob.getTime();
+            long ageInMillis = new Date().getTime() - dob.getTime();
             long ageInYears = ageInMillis / (1000L * 60 * 60 * 24 * 365);
             if (ageInYears < 18) {
                 new Alert(Alert.AlertType.ERROR, "❌ Guest must be at least 18 years old").show();
@@ -99,7 +110,7 @@ public class GuestController implements Initializable {
                     contact,
                     email,
                     new java.sql.Date(registrationDate.getTime()),
-                    loyaltyStatus
+                    selectedStatus.toString()
             );
 
             if (isEditMode) {
@@ -109,8 +120,7 @@ public class GuestController implements Initializable {
                     if (guestTableController != null) {
                         guestTableController.loadGuestData();
                     }
-                    Stage stage = (Stage) btnSave.getScene().getWindow();
-                    stage.close();
+                    ((Stage) btnSave.getScene().getWindow()).close();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "❌ Failed to update guest").show();
                 }
@@ -121,8 +131,7 @@ public class GuestController implements Initializable {
                     if (guestTableController != null) {
                         guestTableController.loadGuestData();
                     }
-                    Stage stage = (Stage) btnSave.getScene().getWindow();
-                    stage.close();
+                    ((Stage) btnSave.getScene().getWindow()).close();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "❌ Guest saving failed").show();
                 }
@@ -159,12 +168,14 @@ public class GuestController implements Initializable {
         if (guestDTO != null) {
             lblGuestId.setText(guestDTO.getGuestId());
             txtName.setText(guestDTO.getName());
+
             if (guestDTO.getDob() != null) {
                 dpDOB.setValue(java.time.LocalDate.parse(dateFormat.format(guestDTO.getDob())));
             }
             txtEmail.setText(guestDTO.getEmail());
             txtContact.setText(guestDTO.getContact());
             txtAddress.setText(guestDTO.getAddress());
+
             if (guestDTO.getRegistrationDate() != null) {
                 dpRegistrationDate.setValue(java.time.LocalDate.parse(dateFormat.format(guestDTO.getRegistrationDate())));
             }
@@ -182,18 +193,6 @@ public class GuestController implements Initializable {
             lblGuestId.setDisable(true);
         } else {
             new Alert(Alert.AlertType.ERROR, "❌ No guest data provided").show();
-        }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        cmLoyaltyStatus.setItems(FXCollections.observableArrayList("Bronze", "Silver", "Gold"));
-        dpRegistrationDate.setValue(java.time.LocalDate.now());
-
-        try {
-            lblGuestId.setText(GuestModel.getNextGuestId());
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 }

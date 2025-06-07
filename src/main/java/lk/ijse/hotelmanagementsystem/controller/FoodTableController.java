@@ -58,7 +58,7 @@ public class FoodTableController implements Initializable {
                     dto.getItemName(),
                     dto.getDescription(),
                     dto.getCategory(),
-                    dto.getAvailable(),
+                    (String) dto.getAvailable(),
                     dto.getPrice()
             )).toList();
 
@@ -160,24 +160,30 @@ public class FoodTableController implements Initializable {
         try {
             List<FoodDTO> foodList = foodModel.getAllFoods();
             List<FoodTM> filteredList = foodList.stream()
-                    .filter(dto -> dto.getItemName().toLowerCase().contains(query) ||
-                            dto.getCategory().toLowerCase().contains(query))
+                    .filter(dto ->
+                            dto.getMenuId().toLowerCase().contains(query) ||
+                                    dto.getItemName().toLowerCase().contains(query) ||
+                                    dto.getCategory().toLowerCase().contains(query) ||
+                                    dto.getDescription().toLowerCase().contains(query))
                     .map(dto -> new FoodTM(
                             dto.getMenuId(),
                             dto.getItemName(),
                             dto.getDescription(),
                             dto.getCategory(),
-                            dto.getAvailable(),
+                            (String) dto.getAvailable(),
                             dto.getPrice()
                     ))
                     .toList();
 
-            ObservableList<FoodTM> observableList = FXCollections.observableArrayList(filteredList);
-            tblFood.setItems(observableList);
+            if (filteredList.isEmpty()) {
+                new Alert(Alert.AlertType.INFORMATION, "No food items found matching: " + query).show();
+            }
 
+            tblFood.setItems(FXCollections.observableArrayList(filteredList));
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "❌ Failed to search food data").show();
+            new Alert(Alert.AlertType.ERROR, "Failed to search food data: " + e.getMessage()).show();
+            loadFoodData();
         }
     }
 }

@@ -3,250 +3,373 @@ package lk.ijse.hotelmanagementsystem.controller;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lk.ijse.hotelmanagementsystem.dto.PaymentDTO;
 import lk.ijse.hotelmanagementsystem.model.PaymentModel;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PaymentController implements Initializable {
 
-    @FXML
-    private Button btnClear;
+    // Constants
+    private static final String PAYMENT_ID_REGEX = "^PAY\\d{3}$";
+    private static final String DEFAULT_TX_PREFIX = "TX";
+    private static final double MAX_AMOUNT = 1_000_000.00;
+    private static final Logger LOGGER = Logger.getLogger(PaymentController.class.getName());
+    public TextField txtPaymentId;
+    public DatePicker dpPaymentDate;
+    public TextField txtTransactionId;
 
-    @FXML
-    private ComboBox<String> cmReservationID;
+    // FXML Components
+    @FXML private Button btnClear;
+    @FXML private ComboBox<String> cmReservationID;
+    @FXML private TextField txtAmount;
+    @FXML private ComboBox<String> cmPaymentMethod;
+    @FXML private ComboBox<String> cmStatus;
+    @FXML private Label lblMessage;
+    @FXML private Button payButton;
+    @FXML private Button btnCancel;
+    @FXML private Label lblPaymentId;
+    @FXML private Label lblReservationDetails;
 
-    @FXML
-    private TextField txtAmount;
-
-    @FXML
-    private ComboBox<String> cmPaymentMethod;
-
-    @FXML
-    private ComboBox<String> cmStatus;
-
-    @FXML
-    private Label lblMessage;
-
-    @FXML
-    private Button payButton;
-
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private Label lblPaymentId;
-
+    // Dependencies
     private final PaymentModel paymentModel = new PaymentModel();
-    private boolean isEditMode = false;
     private PaymentTableController paymentTableController;
-    private final String paymentIDValidation = "^PAY\\d{3}$";
+
+    // State
+    private boolean isEditMode = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cmPaymentMethod.setItems(FXCollections.observableArrayList("Credit Card", "Cash", "Bank Transfer", "Online Payment"));
-        cmStatus.setItems(FXCollections.observableArrayList("Pending", "Completed", "Failed", "Refunded"));
+        initializeComponents();
+        setupEventHandlers();
+        loadInitialData();
+    }
+
+    private void initializeComponents() {
+        setupComboBoxes();
+        lblMessage.setText("");
+    }
+
+    private void setupEventHandlers() {
+        setupReservationSelectionListener();
+    }
+
+    private void loadInitialData() {
+        generateNewPaymentId();
+        loadReservationIds();
+    }
+
+    private void setupComboBoxes() {
+        cmPaymentMethod.setItems(FXCollections.observableArrayList(
+                "Credit Card", "Cash", "Bank Transfer", "Online Payment"));
+        cmStatus.setItems(FXCollections.observableArrayList(
+                "Pending", "Completed", "Failed", "Refunded"));
+    }
+
+    private void generateNewPaymentId() {
         try {
             String nextId = paymentModel.getNextPaymentId();
-            if (nextId == null || !nextId.matches(paymentIDValidation)) {
-                throw new SQLException("Invalid payment ID generated: " + nextId);
+            if (!isValidPaymentId(nextId)) {
+                throw new SQLException("Invalid payment ID format generated: " + nextId);
             }
             lblPaymentId.setText(nextId);
-            cmReservationID.setItems(FXCollections.observableArrayList(paymentModel.loadReservationIds()));
         } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "❌ Failed to initialize payment data: " + e.getMessage()).show();
+            LOGGER.log(Level.SEVERE, "Failed to generate payment ID", e);
+            showErrorAlert("System Error", "Failed to generate payment ID. Please try again.");
             lblPaymentId.setText("ERROR");
         }
-
-        cmReservationID.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !isEditMode) {
-                try {
-                    loadAmountForReservation(newValue);
-                } catch (SQLException e) {
-                    new Alert(Alert.AlertType.ERROR, "Failed to load amount for reservation: " + e.getMessage()).show();
-                    lblMessage.setText("Failed to load amount");
-                    lblMessage.setStyle("-fx-text-fill: red;");
-                }
-            }
-        });
     }
 
-    @FXML
-    public void processPayment(ActionEvent actionEvent) throws SQLException {
-        String paymentId = lblPaymentId.getText();
-        String reservationId = cmReservationID.getValue();
-        String amountText = txtAmount.getText().trim();
-        String paymentMethod = cmPaymentMethod.getValue();
-        String status = cmStatus.getValue();
-        String transactionId = "TX" + System.currentTimeMillis();
-        LocalDateTime paymentDate = LocalDateTime.now();
+    private boolean isValidPaymentId(String id) {
+        return id != null && id.matches(PAYMENT_ID_REGEX);
+    }
 
-        if (paymentId.isEmpty() || reservationId == null || amountText.isEmpty() || paymentMethod == null || status == null) {
-            new Alert(Alert.AlertType.WARNING, "⚠ Please fill in all required fields").show();
-            lblMessage.setText("Please fill all fields");
-            lblMessage.setStyle("-fx-text-fill: red;");
-            return;
-        }
-
-        if (!paymentId.matches(paymentIDValidation)) {
-            new Alert(Alert.AlertType.ERROR, "❌ Invalid Payment ID format (e.g., PAY001): " + paymentId).show();
-            lblMessage.setText("Invalid Payment ID format");
-            lblMessage.setStyle("-fx-text-fill: red;");
-            return;
-        }
-
-        double amount;
+    private void loadReservationIds() {
         try {
-            amount = Double.parseDouble(amountText);
+            List<String> reservationIds = paymentModel.loadReservationIds();
+            cmReservationID.setItems(FXCollections.observableArrayList(reservationIds));
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to load reservation IDs", e);
+            showErrorAlert("Database Error", "Failed to load reservation data");
+        }
+    }
+
+    private void setupReservationSelectionListener() {
+        cmReservationID.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null && !isEditMode) {
+                        loadReservationDetails(newValue);
+                    }
+                });
+    }
+
+    private void loadReservationDetails(String reservationId) {
+        try {
+            Double amount = paymentModel.getReservationTotalCost(reservationId);
+            String reservationDetails = paymentModel.getReservationDetails(reservationId);
+
+            if (amount != null) {
+                txtAmount.setText(String.format("%.2f", amount));
+                lblReservationDetails.setText(reservationDetails != null ?
+                        reservationDetails : "No details available");
+                clearMessage();
+            } else {
+                txtAmount.clear();
+                showWarningAlert("No Amount Found", "No amount found for selected reservation");
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to load reservation details", e);
+            showErrorAlert("Database Error", "Failed to load reservation details");
+        }
+    }
+
+    @FXML
+    private void processPayment(ActionEvent actionEvent) {
+        if (!validateForm()) return;
+
+        try {
+            PaymentDTO paymentDTO = createPaymentDTO();
+            boolean success = processPaymentDTO(paymentDTO);
+            handlePaymentResult(success);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Payment processing failed", e);
+            showErrorAlert("Payment Failed", "Failed to process payment. Please try again.");
+        }
+    }
+
+    private boolean processPaymentDTO(PaymentDTO paymentDTO) throws SQLException {
+        return isEditMode ?
+                paymentModel.updatePayment(paymentDTO) :
+                paymentModel.savePayment(paymentDTO);
+    }
+
+    private boolean validateForm() {
+        if (!validateReservationSelection()) return false;
+        if (!validateAmount()) return false;
+        if (!validatePaymentMethod()) return false;
+        return validatePaymentStatus();
+    }
+
+    private boolean validateReservationSelection() {
+        if (cmReservationID.getValue() == null) {
+            showWarningAlert("Validation Error", "Please select a reservation");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePaymentMethod() {
+        if (cmPaymentMethod.getValue() == null) {
+            showWarningAlert("Validation Error", "Please select a payment method");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePaymentStatus() {
+        if (cmStatus.getValue() == null) {
+            showWarningAlert("Validation Error", "Please select a payment status");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateAmount() {
+        try {
+            double amount = parseAmount();
             if (amount <= 0) {
-                new Alert(Alert.AlertType.ERROR, "❌ Amount must be positive").show();
-                lblMessage.setText("Amount must be positive");
-                lblMessage.setStyle("-fx-text-fill: red;");
-                return;
+                showErrorAlert("Invalid Amount", "Amount must be greater than zero");
+                return false;
             }
+            if (amount > MAX_AMOUNT) {
+                showErrorAlert("Invalid Amount", "Amount exceeds maximum allowed value");
+                return false;
+            }
+            return true;
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "❌ Invalid amount format").show();
-            lblMessage.setText("Invalid amount format");
-            lblMessage.setStyle("-fx-text-fill: red;");
-            return;
+            showErrorAlert("Invalid Amount", "Please enter a valid numeric amount");
+            return false;
         }
+    }
 
-        PaymentDTO paymentDTO = new PaymentDTO(
-                paymentId,
-                reservationId,
-                Timestamp.valueOf(paymentDate),
-                amount,
-                transactionId,
-                paymentMethod,
-                status
+    private double parseAmount() throws NumberFormatException {
+        return Double.parseDouble(txtAmount.getText().trim());
+    }
+
+    private PaymentDTO createPaymentDTO() {
+        return new PaymentDTO(
+                lblPaymentId.getText(),
+                cmReservationID.getValue(),
+                Timestamp.valueOf(LocalDateTime.now()),
+                parseAmount(),
+                generateTransactionId(),
+                cmPaymentMethod.getValue(),
+                cmStatus.getValue()
         );
+    }
 
-        boolean success;
-        if (isEditMode) {
-            success = paymentModel.updatePayment(paymentDTO);
-        } else {
-            success = paymentModel.savePayment(paymentDTO);
-        }
+    private String generateTransactionId() {
+        return String.format("%s-%d-%04d",
+                DEFAULT_TX_PREFIX,
+                System.currentTimeMillis(),
+                ThreadLocalRandom.current().nextInt(1000));
+    }
 
+    private void handlePaymentResult(boolean success) {
         if (success) {
-            new Alert(Alert.AlertType.INFORMATION, isEditMode ? "✅ Payment updated successfully" : "✅ Payment saved successfully").show();
-            lblMessage.setText(isEditMode ? "Payment updated successfully" : "Payment saved successfully");
-            lblMessage.setStyle("-fx-text-fill: green;");
-            if (paymentTableController != null) {
-                paymentTableController.refreshTable();
-            }
-            Stage stage = (Stage) payButton.getScene().getWindow();
-            stage.close();
+            notifySuccess();
+            refreshPaymentTable();
+            closeWindow();
         } else {
-            new Alert(Alert.AlertType.ERROR, "❌ Operation failed").show();
-            lblMessage.setText("Operation failed");
-            lblMessage.setStyle("-fx-text-fill: red;");
+            notifyFailure();
+        }
+    }
+
+    private void notifySuccess() {
+        String title = isEditMode ? "Payment Updated" : "Payment Processed";
+        String message = isEditMode ? "Payment updated successfully" : "Payment processed successfully";
+        showSuccessAlert(title, message);
+    }
+
+    private void notifyFailure() {
+        String message = isEditMode ? "Failed to update payment" : "Failed to process payment";
+        showErrorAlert("Operation Failed", message);
+    }
+
+    private void refreshPaymentTable() {
+        if (paymentTableController != null) {
+            paymentTableController.refreshTable();
         }
     }
 
     @FXML
-    public void btnClearOnAction(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to clear the form?", ButtonType.YES, ButtonType.NO);
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            resetForm();
-        }
+    private void btnClearOnAction(ActionEvent actionEvent) {
+        showConfirmationDialog("Clear Form",
+                "Are you sure you want to clear the form?",
+                this::resetForm);
     }
 
     @FXML
-    public void btnCancelOnAction(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to cancel and return to the payment table?", ButtonType.YES, ButtonType.NO);
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PaymentTable.fxml"));
-                Parent root = loader.load();
-                Stage stage = (Stage) btnCancel.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Hotel Management System - Payment Table");
-                stage.centerOnScreen();
-            } catch (IOException e) {
-                new Alert(Alert.AlertType.ERROR, "Error navigating to payment table: " + e.getMessage()).show();
-                lblMessage.setText("Error navigating to payment table: " + e.getMessage());
-                lblMessage.setStyle("-fx-text-fill: red;");
-            }
-        }
+    private void btnCancelOnAction(ActionEvent actionEvent) {
+        showConfirmationDialog("Cancel Payment",
+                "Are you sure you want to cancel?",
+                this::closeWindow);
     }
 
     private void resetForm() {
-        try {
-            String nextId = paymentModel.getNextPaymentId();
-            if (nextId == null || !nextId.matches(paymentIDValidation)) {
-                throw new SQLException("Invalid payment ID generated: " + nextId);
-            }
-            lblPaymentId.setText(nextId);
-            cmReservationID.getSelectionModel().clearSelection();
-            txtAmount.clear();
-            cmPaymentMethod.getSelectionModel().clearSelection();
-            cmStatus.getSelectionModel().clearSelection();
-            lblMessage.setText("");
-            lblMessage.setStyle("");
-            payButton.setDisable(false);
-            btnCancel.setDisable(false);
-            isEditMode = false;
-            lblPaymentId.setDisable(false);
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "❌ Failed to reset form: " + e.getMessage()).show();
-            lblPaymentId.setText("ERROR");
-            lblMessage.setText("Failed to reset form: " + e.getMessage());
-            lblMessage.setStyle("-fx-text-fill: red;");
-        }
+        generateNewPaymentId();
+        clearFormFields();
+        resetEditMode();
+        clearMessage();
     }
 
-    private void loadAmountForReservation(String reservationId) throws SQLException {
-        Double amount = paymentModel.getReservationTotalCost(reservationId);
-        if (amount != null) {
-            txtAmount.setText(String.format("%.2f", amount));
-        } else {
-            txtAmount.clear();
-            lblMessage.setText("No total cost found for reservation: " + reservationId);
-            lblMessage.setStyle("-fx-text-fill: orange;");
-        }
+    private void clearFormFields() {
+        cmReservationID.getSelectionModel().clearSelection();
+        txtAmount.clear();
+        cmPaymentMethod.getSelectionModel().clearSelection();
+        cmStatus.getSelectionModel().clearSelection();
+        lblReservationDetails.setText("");
+    }
+
+    private void resetEditMode() {
+        isEditMode = false;
+        lblPaymentId.setDisable(false);
+    }
+
+    private void clearMessage() {
+        lblMessage.setText("");
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) payButton.getScene().getWindow();
+        stage.close();
     }
 
     public void setPaymentData(PaymentDTO paymentDTO) {
-        isEditMode = true;
-        if (paymentDTO != null) {
-            String paymentId = paymentDTO.getPaymentId();
-            if (paymentId == null || !paymentId.matches(paymentIDValidation)) {
-                new Alert(Alert.AlertType.ERROR, "❌ Invalid payment ID in edit mode: " + paymentId).show();
-                return;
-            }
-            lblPaymentId.setText(paymentId);
-            cmReservationID.setValue(paymentDTO.getReservationId());
-            txtAmount.setText(String.format("%.2f", paymentDTO.getAmount()));
-            cmPaymentMethod.setValue(paymentDTO.getPaymentMethod());
-            cmStatus.setValue(paymentDTO.getStatus());
-            lblPaymentId.setDisable(true);
-            lblMessage.setText("Editing payment: " + paymentId);
-            lblMessage.setStyle("-fx-text-fill: blue;");
-        } else {
-            new Alert(Alert.AlertType.ERROR, "❌ No payment data provided").show();
-            lblMessage.setText("No payment data provided");
-            lblMessage.setStyle("-fx-text-fill: red;");
+        if (paymentDTO == null) {
+            showErrorAlert("Invalid Data", "No payment data provided");
+            return;
         }
+
+        initializeEditMode(paymentDTO);
+    }
+
+    private void initializeEditMode(PaymentDTO paymentDTO) {
+        isEditMode = true;
+        setFormFields(paymentDTO);
+        lblPaymentId.setDisable(true);
+        loadReservationDetails(paymentDTO.getReservationId());
+    }
+
+    private void setFormFields(PaymentDTO paymentDTO) {
+        lblPaymentId.setText(paymentDTO.getPaymentId());
+        cmReservationID.setValue(paymentDTO.getReservationId());
+        txtAmount.setText(String.format("%.2f", paymentDTO.getAmount()));
+        cmPaymentMethod.setValue(paymentDTO.getPaymentMethod());
+        cmStatus.setValue(paymentDTO.getStatus());
     }
 
     public void setPaymentTableController(PaymentTableController paymentTableController) {
         this.paymentTableController = paymentTableController;
+    }
+
+    // Alert helper methods
+    private void showErrorAlert(String title, String message) {
+        showAlert(Alert.AlertType.ERROR, title, message);
+        setMessage(message, "red");
+    }
+
+    private void showWarningAlert(String title, String message) {
+        showAlert(Alert.AlertType.WARNING, title, message);
+        setMessage(message, "orange");
+    }
+
+    private void showSuccessAlert(String title, String message) {
+        showAlert(Alert.AlertType.INFORMATION, title, message);
+        setMessage(message, "green");
+    }
+
+    private void setMessage(String message, String color) {
+        lblMessage.setText(message);
+        lblMessage.setStyle("-fx-text-fill: " + color + ";");
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showConfirmationDialog(String title, String content, Runnable onConfirm) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            onConfirm.run();
+        }
+    }
+
+    public void initializeWithData(PaymentDTO paymentData) {
+    }
+
+    public void setParentController(PaymentTableController paymentTableController) {
+
     }
 }
